@@ -5,28 +5,18 @@ import java.util.HashMap;
 public final class UtilisateurFactory {
     private UtilisateurFactory() {}
 
-    public static Utilisateur getUtilisateur(String pNom, String pPrenom, int pAge, String theme, HashMap<String, String> options) { // theme en ENUM ?
-
-
+    public static Utilisateur getUtilisateur(String pNom, String pPrenom, int pAge, String pVille, String theme) { // theme en ENUM ?
         Utilisateur utilisateur = null;
         try {
             switch(theme) {
                 case "sport":
-                    Sportif.SportifBuilder utilisateurTemp = new Sportif.SportifBuilder(pNom, pPrenom, pAge);
-                    if(options.get("sport") != null) {
-                        utilisateurTemp.sport(options.get("sport"));
-                    }
-                    if(options.get("nbSeancesParSemaine") != null) {
-                        utilisateurTemp.nbSeancesParSemaine(Integer.parseInt(options.get("nbSeancesParSemaine")));
-                    }
-                    if(options.get("niveau") != null) {
-                        utilisateurTemp.nbSeancesParSemaine(Integer.parseInt(options.get("niveau")));
-                    }
-                    utilisateur = utilisateurTemp.build();
+                    utilisateur = new Sportif(pNom, pPrenom, pAge, pVille);
                     break;
                 case "jeux":
+                    utilisateur = new Joueur(pNom, pPrenom, pAge, pVille);
                     break;
                 case "culture":
+                    utilisateur = new GrosseTete(pNom, pPrenom, pAge, pVille);
                     break;
             }
         } catch (IllegalArgumentException e) {
