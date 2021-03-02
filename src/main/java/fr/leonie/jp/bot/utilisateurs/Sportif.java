@@ -1,20 +1,51 @@
 package fr.leonie.jp.bot.utilisateurs;
 
-public class Sportif extends Utilisateur {
-    // optional
-    private final String sport;
-    private final int nbSeancesParSemaine;
-    private final int niveau; // ENUM
+import fr.leonie.jp.bot.loisirs.Sport;
 
-    private Sportif(SportifBuilder sportifBuilder) {
-        super(sportifBuilder.nom, sportifBuilder.prenom, sportifBuilder.age);
-        sport = sportifBuilder.sport;
-        nbSeancesParSemaine = sportifBuilder.nbSeancesParSemaine;
-        niveau = sportifBuilder.niveau;
+import java.util.ArrayList;
+
+public class Sportif extends Utilisateur {
+    private ArrayList<Sport> sports = new ArrayList<Sport>();
+    private int nbSeancesParSemaine;
+    private int niveau;
+
+   /* private enum Niveau {
+        PRO(4, "PRO"),
+        COMPETITION(3, "COMPETITION"),
+        AMATEUR(2, "AMATEUR"),
+        NOVICE(1, "NOVICE");
+
+        private String name;
+        private int value;
+
+        private Niveau(int value, String name) {
+            this.value = value;
+            this.name = name;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }*/
+
+    Sportif(String pNom, String pPrenom, int pAge, String pVille) {
+        super(pNom, pPrenom, pAge, pVille);
     }
 
-    public String getSport() {
-        return sport;
+    public void addSport(Sport sport) {
+        this.sports.add(sport);
+    }
+
+    public void setNbSeancesParSemaine(int nbSeancesParSemaine) {
+        this.nbSeancesParSemaine = nbSeancesParSemaine;
+    }
+
+    public void setNiveau(int niveau) {
+        this.niveau = niveau;
+    }
+
+    public ArrayList<Sport> getSports() {
+        return sports;
     }
 
     public int getNbSeancesParSemaine() {
@@ -23,50 +54,5 @@ public class Sportif extends Utilisateur {
 
     public int getNiveau() {
         return niveau;
-    }
-
-    public static class SportifBuilder {
-        // required
-        private final String nom;
-        private final String prenom;
-        private final int age;
-
-        // optional
-        private String sport;
-        private int nbSeancesParSemaine;
-        private int niveau; // ENUM
-
-        public SportifBuilder(String pNom, String pPrenom, int pAge) {
-            nom = pNom;
-            prenom = pPrenom;
-            age = pAge;
-            sport = "non précisé";
-            nbSeancesParSemaine = 0;
-            niveau = 0;
-        }
-
-        public SportifBuilder sport(String pSport) {
-            sport = pSport;
-            return this;
-        }
-
-        public SportifBuilder nbSeancesParSemaine(int pNbSeancesParSemaine) {
-            if(pNbSeancesParSemaine >= 0) {
-                nbSeancesParSemaine = pNbSeancesParSemaine;
-            }
-            return this;
-        }
-
-        public SportifBuilder niveau(int pNiveau) {
-            if(pNiveau >= 0) {
-                niveau = pNiveau;
-            }
-            return this;
-        }
-
-        public Sportif build() {
-            Sportif sportif =  new Sportif(this);
-            return sportif;
-        }
     }
 }
