@@ -1,4 +1,4 @@
-package fr.leonie.jp.bot;
+package fr.leonie.jp.bot.communication;
 
 public interface Communication {
     void open();

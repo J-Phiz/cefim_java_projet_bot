@@ -1,11 +1,8 @@
 package fr.leonie.jp.bot.client;
 
-import fr.leonie.jp.bot.Communication;
+import fr.leonie.jp.bot.communication.ClientCommunication;
+import fr.leonie.jp.bot.communication.Communication;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.Socket;
 import java.util.Scanner;
 
 public class ClientMain {

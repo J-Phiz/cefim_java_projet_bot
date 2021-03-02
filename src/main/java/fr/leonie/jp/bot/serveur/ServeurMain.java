@@ -1,11 +1,11 @@
 package fr.leonie.jp.bot.serveur;
 
-import fr.leonie.jp.bot.Communication;
+import fr.leonie.jp.bot.communication.Communication;
+import fr.leonie.jp.bot.communication.ServeurCommunication;
 import fr.leonie.jp.bot.constant.Constant;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
 
 public class ServeurMain {
 

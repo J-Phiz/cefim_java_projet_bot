@@ -1,12 +1,7 @@
 package fr.leonie.jp.bot.serveur;
 
-import fr.leonie.jp.bot.Communication;
+import fr.leonie.jp.bot.communication.Communication;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
 import java.util.Objects;
 
 public class ServeurThread extends Thread {

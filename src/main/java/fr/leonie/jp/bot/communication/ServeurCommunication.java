@@ -1,6 +1,6 @@
-package fr.leonie.jp.bot.serveur;
+package fr.leonie.jp.bot.communication;
 
-import fr.leonie.jp.bot.Communication;
+import fr.leonie.jp.bot.communication.Communication;
 
 import java.io.BufferedReader;
 import java.io.IOException;
