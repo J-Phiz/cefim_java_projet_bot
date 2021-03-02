@@ -12,4 +12,20 @@ public abstract class Utilisateur {
         age = pAge;
         ville = pVille;
     }
+
+    public String getNom() {
+        return nom;
+    }
+
+    public String getPrenom() {
+        return prenom;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public String getVille() {
+        return ville;
+    }
 }
