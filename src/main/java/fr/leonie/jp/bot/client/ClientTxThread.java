@@ -26,10 +26,10 @@ public class ClientTxThread implements Runnable {
             if(answer != null) {
                 communication.send(answer);
 
-                for (String byeAnswer : byeAnswers) {
-                    if (answer.toLowerCase().matches(".*" + byeAnswer + ".*")) {
+                String[] words = answer.toLowerCase().split(" ");
+                for(String word : words) {
+                    if(byeAnswers.contains(word)){
                         fin = true;
-                        break;
                     }
                 }
             }
