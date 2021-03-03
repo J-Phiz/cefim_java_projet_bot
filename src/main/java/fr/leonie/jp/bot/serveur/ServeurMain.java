@@ -1,5 +1,6 @@
 package fr.leonie.jp.bot.serveur;
 
+import fr.leonie.jp.bot.Bot;
 import fr.leonie.jp.bot.communication.Communication;
 import fr.leonie.jp.bot.communication.ServeurCommunication;
 import fr.leonie.jp.bot.constant.Constant;
@@ -14,6 +15,7 @@ public class ServeurMain {
     public ServeurMain() {
         try {
             this.serverSocket = new ServerSocket(Constant.getPort());
+
         } catch (IOException ex) {
             System.out.println("I/O erreur: " + ex.getMessage());
             ex.printStackTrace();

@@ -44,7 +44,7 @@ public class ExportXML {
             DOMSource source = new DOMSource(doc);
 
             //write to file
-            StreamResult file = new StreamResult(new File("/Users/leonie/Documents/CDA/java/cefim_java_projet_bot/src/main/java/fr/leonie/jp/bot/utilisateurs.xml"));
+            StreamResult file = new StreamResult(new File(System.getProperty("user.dir") + "/src/main/java/fr/leonie/jp/bot/utilisateurs.xml"));
             transformer.transform(source, file);
 
         } catch (Exception e) {

@@ -1,5 +1,6 @@
 package fr.leonie.jp.bot;
 
+import fr.leonie.jp.bot.communication.Communication;
 import fr.leonie.jp.bot.utilisateurs.Utilisateur;
 import fr.leonie.jp.bot.utilisateurs.UtilisateurFactory;
 import fr.leonie.jp.bot.xml.ExportXML;
@@ -9,11 +10,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-public class Bot implements Runnable {
+public class Bot {
     private static final Bot INSTANCE = new Bot();
     private final String nom;
     private final ArrayList<Utilisateur> listeUtilisateurs;
-    private static final Scanner SCANNER = new Scanner(System.in);
 
     private final String[] yesAnswersArray = {"oui", "yes", "yep", "ouai", "ouep"};
     private final String[] noAnswersArray = {"non", "no", "nop", "nan"};
@@ -37,51 +37,51 @@ public class Bot implements Runnable {
         return listeUtilisateurs;
     }
 
-    private void discuss() {
+    public void discuss(Communication com) {
         String prenom = null;
         String nomF = null;
 
-        System.out.println("Bonjour, je suis MeetBot. Comment t'appelles-tu ?");
-        String response = SCANNER.nextLine();
+        com.send("Bonjour, je suis MeetBot. Comment t'appelles-tu ?");
+        String response = com.receive();
         String[] splitResponse = response.split(" ");
         if(response.split(" ").length == 2){
             prenom = splitResponse[0];
             nomF = splitResponse[1];
         } else if(response.split(" ").length == 1) {
-            System.out.println("C'est ton prénom ?");
-            response = SCANNER.nextLine();
+            com.send("C'est ton prénom ?");
+            response = com.receive();
             if(yesAnswers.contains(response)) {
                 prenom = splitResponse[0];
-                System.out.println("Et quel est ton nom ?");
-                response = SCANNER.nextLine();
+                com.send("Et quel est ton nom ?");
+                response = com.receive();
                 nomF = response;
             } else if (noAnswers.contains(response)) {
-                System.out.println("Alors c'est ton nom ?");
-                response = SCANNER.nextLine();
+                com.send("Alors c'est ton nom ?");
+                response = com.receive();
                 if(yesAnswers.contains(response)) {
                     nomF = splitResponse[0];
-                    System.out.println("Et quel est ton prénom ?");
-                    response = SCANNER.nextLine();
+                    com.send("Et quel est ton prénom ?");
+                    response = com.receive();
                     prenom = response;
                 } else {
-                    System.out.println("Tu te moques de moi !!");
+                    com.send("Tu te moques de moi !!");
                 }
             } else {
-                System.out.println("C'est une question simple, peux-tu répondre par oui ou par non...");
+                com.send("C'est une question simple, peux-tu répondre par oui ou par non...");
             }
         } else {
-            System.out.println("C'est un nom ça ?!?");
+            com.send("C'est un nom ça ?!?");
         }
 
-        System.out.println("Quel âge as-tu ?");
-        response = SCANNER.nextLine();
+        com.send("Quel âge as-tu ?");
+        response = com.receive();
         int age = Integer.parseInt(response);
 
-        System.out.println("Tu te décris comme étant plutôt : ");
-        System.out.println("- fou de sport : tape 1");
-        System.out.println("- accro à la culture : tape 2");
-        System.out.println("- passionné de jeux : tape 3");
-        response = SCANNER.nextLine();
+        com.send("Tu te décris comme étant plutôt : \n"
+        + "- fou de sport : tape 1\n"
+        + "- accro à la culture : tape 2\n"
+        + "- passionné de jeux : tape 3");
+        response = com.receive();
         String theme = "";
         switch(response) {
             case "1" :
@@ -94,7 +94,7 @@ public class Bot implements Runnable {
                 theme = "jeux";
                 break;
             default:
-                System.out.println("Tu as bien lu la question ?");
+                com.send("Tu as bien lu la question ?");
                 break;
         }
 
@@ -104,16 +104,10 @@ public class Bot implements Runnable {
         ExportXML.exportUtilisateurs(listeUtilisateurs);
 
         if(prenom != null && nomF != null) {
-            System.out.println("Au revoir " + prenom + " " + nomF);
-            System.out.println(utilisateur.getClass().getSimpleName());
+            com.send("Au revoir " + prenom + " " + nomF);
         } else {
-            System.out.println("Bye");
+            com.send("Bye");
         }
-        SCANNER.close();
     }
 
-    @Override
-    public void run() {
-        this.discuss();
-    }
 }
