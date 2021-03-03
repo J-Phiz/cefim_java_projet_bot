@@ -28,7 +28,7 @@ public class Sportif extends Utilisateur {
         }
     }*/
 
-    Sportif(String pNom, String pPrenom, int pAge, String pVille) {
+    public Sportif(String pNom, String pPrenom, int pAge, String pVille) {
         super(pNom, pPrenom, pAge, pVille);
     }
 
