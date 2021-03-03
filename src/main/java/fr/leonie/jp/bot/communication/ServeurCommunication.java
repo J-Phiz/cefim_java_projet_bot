@@ -15,6 +15,7 @@ public class ServeurCommunication implements Communication {
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
+    private boolean wantToClose;
 
 
     public ServeurCommunication(ServerSocket serverSocket) {
@@ -64,5 +65,16 @@ public class ServeurCommunication implements Communication {
             System.out.println("I/O error: " + ex.getMessage());
             ex.printStackTrace();
         }
+    }
+
+    @Override
+    public void closeRequest(boolean wantToClose) {
+        this.wantToClose = wantToClose;
+
+    }
+
+    @Override
+    public boolean isCloseRequested() {
+        return wantToClose;
     }
 }

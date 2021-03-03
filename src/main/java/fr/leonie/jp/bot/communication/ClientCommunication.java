@@ -15,6 +15,7 @@ public class ClientCommunication implements Communication {
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
+    private boolean wantToClose;
 
 
     @Override
@@ -66,4 +67,16 @@ public class ClientCommunication implements Communication {
             ex.printStackTrace();
         }
     }
+
+    @Override
+    public void closeRequest(boolean wantToClose) {
+        this.wantToClose = wantToClose;
+
+    }
+
+    @Override
+    public boolean isCloseRequested() {
+        return wantToClose;
+    }
+
 }

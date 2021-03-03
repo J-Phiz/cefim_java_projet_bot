@@ -5,4 +5,6 @@ public interface Communication {
     void send(String msg);
     String receive();
     void close();
+    void closeRequest(boolean wantToClose);
+    boolean isCloseRequested();
 }

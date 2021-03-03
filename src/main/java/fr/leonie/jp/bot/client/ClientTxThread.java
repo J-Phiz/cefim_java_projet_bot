@@ -33,7 +33,7 @@ public class ClientTxThread implements Runnable {
                     }
                 }
             }
-        } while(!fin);
-
+        } while(!fin && !communication.isCloseRequested());
+        communication.closeRequest(true);
     }
 }

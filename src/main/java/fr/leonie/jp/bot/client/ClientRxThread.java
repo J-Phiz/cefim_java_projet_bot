@@ -19,7 +19,8 @@ public class ClientRxThread implements Runnable {
             if(question != null) {
                 System.out.println("MeetBot: " + question);
             }
-        } while(question != null);
-
+        } while(question != null && !communication.isCloseRequested());
+        communication.closeRequest(true);
     }
+
 }
