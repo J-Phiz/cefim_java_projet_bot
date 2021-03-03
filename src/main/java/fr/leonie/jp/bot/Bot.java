@@ -5,6 +5,7 @@ import fr.leonie.jp.bot.utilisateurs.*;
 import fr.leonie.jp.bot.constant.Constant;
 import fr.leonie.jp.bot.xml.ExportXML;
 import fr.leonie.jp.bot.xml.ImportXML;
+import jdk.jshell.execution.Util;
 
 import javax.swing.text.html.Option;
 import java.util.*;
@@ -46,17 +47,27 @@ public class Bot {
             identite = this.validatedName(com);
         } while(identite.isEmpty());
 
-        Optional<Integer> age;
-        do {
-            age = this.validatedAge(com);
-        } while(age.isEmpty());
+        // retrouver l'utilisateur si déjà connu
+        Optional<Utilisateur> utilisateur = this.doWeKnow(com, identite);
 
-        Optional<String> ville;
-        do {
-            ville = this.validatedVille(com);
-        } while(ville.isEmpty());
+        // sinon, on le crée
+        if(utilisateur.isEmpty()){
+            Optional<Integer> age;
+            do {
+                age = this.validatedAge(com);
+            } while(age.isEmpty());
 
-        Optional<Utilisateur> utilisateur = this.validatedUtilisateur(com, identite, age, ville);
+            Optional<String> ville;
+            do {
+                ville = this.validatedVille(com);
+            } while(ville.isEmpty());
+
+            utilisateur = this.validatedUtilisateur(com, identite, age, ville);
+        }
+
+        // et on fait plus ample connaissance
+        // attention : si utilisateur deja connu, ne pas redemander ce qu'on sait déjà
+
 
         // exportXML
         ExportXML.exportUtilisateurs(listeUtilisateurs);
@@ -83,7 +94,7 @@ public class Bot {
         } else if(splitResponse.length == 1) {
             com.send("C'est ton prénom ?");
             response = com.receive();
-            if(yesAnswers.contains(response)) {
+            if(yesAnswers.contains(response.toLowerCase())) {
                 String prenom = splitResponse[0];
                 com.send("Et quel est ton nom ?");
                 response = com.receive();
@@ -93,10 +104,10 @@ public class Bot {
                 } else {
                     return Optional.of(new String[]{prenom, response});
                 }
-            } else if (noAnswers.contains(response)) {
+            } else if (noAnswers.contains(response.toLowerCase())) {
                 com.send("Alors c'est ton nom ?");
                 response = com.receive();
-                if(yesAnswers.contains(response)) {
+                if(yesAnswers.contains(response.toLowerCase())) {
                     String nomF = splitResponse[0];
                     com.send("Et quel est ton prénom ?");
                     response = com.receive();
@@ -173,5 +184,22 @@ public class Bot {
 
         listeUtilisateurs.add(utilisateur);
         return Optional.ofNullable(utilisateur);
+    }
+
+    private Optional<Utilisateur> doWeKnow(Communication com, Optional<String[]> identite) {
+        for(Utilisateur utilisateur : listeUtilisateurs) {
+            if(utilisateur.getPrenom().equals(identite.get()[0]) && utilisateur.getNom().equals(identite.get()[1])) {
+                com.send("Etes-vous " + utilisateur.getPrenom() + " " + utilisateur.getNom() + ", " + utilisateur.getAge() + " ans, vivant à " + utilisateur.getVille() + " ?");
+                String response = com.receive();
+                if(yesAnswers.contains(response.toLowerCase())) {
+                    com.send("Ravi de te revoir !");
+                    return Optional.of(utilisateur);
+                } else if(noAnswers.contains(response.toLowerCase())) {
+                    com.send("Ah, j'ai dû confondre...");
+                }
+            }
+        }
+        com.send("Enchanté de faire ta connaissance");
+        return Optional.empty();
     }
 }

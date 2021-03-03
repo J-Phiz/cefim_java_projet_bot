@@ -1,5 +1,7 @@
 package fr.leonie.jp.bot.utilisateurs;
 
+import java.util.Objects;
+
 public abstract class Utilisateur {
     private final String nom;
     private final String prenom;
@@ -27,5 +29,13 @@ public abstract class Utilisateur {
 
     public String getVille() {
         return ville;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Utilisateur that = (Utilisateur) o;
+        return Objects.equals(nom, that.nom) && Objects.equals(prenom, that.prenom);
     }
 }

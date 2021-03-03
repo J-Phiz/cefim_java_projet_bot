@@ -7,7 +7,7 @@ public class Constant {
 
     private static final String[] YES_ANSWERS_ARRAY = {"oui", "yes", "yep", "ouai", "ouep"};
     private static final String[] NO_ANSWERS_ARRAY = {"non", "no", "nop", "nan"};
-    private static final String[] BYE_ANSWERS_ARRAY = {"a+", "au revoir", "bye", "tchao", "tchuss"};
+    private static final String[] BYE_ANSWERS_ARRAY = {"a+", "revoir", "bye", "tchao", "tchuss"};
 
     private Constant() {
         // Pour interdire le constructeur
