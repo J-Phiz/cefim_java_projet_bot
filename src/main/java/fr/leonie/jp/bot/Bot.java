@@ -38,6 +38,8 @@ public class Bot {
     }
 
     public void discuss(Communication com) {
+        com.send("Bonjour, je suis MeetBot.");
+
         Optional<String[]> identite;
         do {
             identite = this.validatedName(com);
@@ -48,7 +50,12 @@ public class Bot {
             age = this.validatedAge(com);
         } while(age.isEmpty());
 
-        Optional<Utilisateur> utilisateur = this.validatedUtilisateur(com, identite, age);
+        Optional<String> ville;
+        do {
+            ville = this.validatedVille(com);
+        } while(ville.isEmpty());
+
+        Optional<Utilisateur> utilisateur = this.validatedUtilisateur(com, identite, age, ville);
 
         // exportXML
         ExportXML.exportUtilisateurs(listeUtilisateurs);
@@ -61,7 +68,7 @@ public class Bot {
     }
 
     private Optional<String[]> validatedName(Communication com) {
-        com.send("Bonjour, je suis MeetBot. Comment t'appelles-tu ?");
+        com.send("Comment t'appelles-tu ?");
         String response = com.receive();
 
         if(response == null || !response.matches("[a-zA-Z ]+")) {
@@ -123,7 +130,19 @@ public class Bot {
         }
     }
 
-    private Optional<Utilisateur> validatedUtilisateur(Communication com, Optional<String[]> identite, Optional<Integer> age) {
+    private Optional<String> validatedVille(Communication com) {
+        com.send("Dans quelle ville vis-tu ?");
+        String response = com.receive();
+
+        if(response == null || !response.matches("[a-zA-Z]+")) {
+            com.send("Tu te moques de moi !!");
+            return Optional.empty();
+        } else {
+            return Optional.of(response);
+        }
+    }
+
+    private Optional<Utilisateur> validatedUtilisateur(Communication com, Optional<String[]> identite, Optional<Integer> age, Optional<String> ville) {
         String response;
         do {
             com.send("Tu te décris comme étant plutôt : fou de sport (tape 1), accro à la culture (tape 2), passionné de jeux (tape 3)");
@@ -131,20 +150,21 @@ public class Bot {
         } while(!options.contains(response));
 
         Utilisateur utilisateur = null;
-        if(identite.isPresent() && identite.get().length == 2 && age.isPresent()) {
+        if(identite.isPresent() && identite.get().length == 2 && age.isPresent() && ville.isPresent()) {
             String prenom = identite.get()[0];
             String nomF = identite.get()[1];
             int ageFinal = age.get();
+            String villeFinale = ville.get();
 
             switch(response) {
                 case "1" :
-                    utilisateur = new Sportif(nomF, prenom, ageFinal, "Lille");
+                    utilisateur = new Sportif(nomF, prenom, ageFinal, villeFinale);
                     break;
                 case "2":
-                    utilisateur = new GrosseTete(nomF, prenom, ageFinal, "Lille");
+                    utilisateur = new GrosseTete(nomF, prenom, ageFinal, villeFinale);
                     break;
                 case "3":
-                    utilisateur = new Joueur(nomF, prenom, ageFinal, "Lille");
+                    utilisateur = new Joueur(nomF, prenom, ageFinal, villeFinale);
                     break;
             }
         }
