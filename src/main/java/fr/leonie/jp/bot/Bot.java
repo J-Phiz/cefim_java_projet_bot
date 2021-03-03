@@ -4,6 +4,7 @@ import fr.leonie.jp.bot.communication.Communication;
 import fr.leonie.jp.bot.utilisateurs.*;
 import fr.leonie.jp.bot.constant.Constant;
 import fr.leonie.jp.bot.xml.ExportXML;
+import fr.leonie.jp.bot.xml.ImportXML;
 
 import javax.swing.text.html.Option;
 import java.util.*;
@@ -22,6 +23,7 @@ public class Bot {
     private Bot() {
         nom = "MeetBot";
         listeUtilisateurs = new ArrayList<Utilisateur>();
+        ImportXML.importUtilisateurs(listeUtilisateurs);
     }
 
     public static Bot getInstance() {
@@ -122,9 +124,10 @@ public class Bot {
         com.send("Quel âge as-tu ?");
         String response = com.receive();
         try {
-            Integer age = Integer.parseInt(response);
+            Integer age = new Integer(response);
             return Optional.of(age);
         } catch(NumberFormatException e) {
+            com.send("Un age avec des chiffres stp...");
             return Optional.empty();
         }
     }
