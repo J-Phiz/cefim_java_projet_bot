@@ -47,6 +47,8 @@ public class Bot {
             identite = this.validatedName(com);
         } while(identite.isEmpty());
 
+        System.out.println("Connexion avec l'utilisateur " + identite.get()[0] + " " + identite.get()[1]);
+
         // retrouver l'utilisateur si déjà connu
         Optional<Utilisateur> utilisateur = this.doWeKnow(com, identite);
 
@@ -77,6 +79,8 @@ public class Bot {
         } else {
             com.send("Bye");
         }
+
+        System.out.println("Fin de connexion avec l'utilisateur " + identite.get()[0] + " " + identite.get()[1]);
     }
 
     private Optional<String[]> validatedName(Communication com) {
