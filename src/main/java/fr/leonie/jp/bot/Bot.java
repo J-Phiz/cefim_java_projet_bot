@@ -162,7 +162,10 @@ public class Bot {
     private Optional<Utilisateur> validatedUtilisateur(Communication com, Optional<String[]> identite, Optional<Integer> age, Optional<String> ville) {
         String response;
         do {
-            com.send("Tu te décris comme étant plutôt : fou de sport (tape 1), accro à la culture (tape 2), passionné de jeux (tape 3)");
+            com.send("Tu te décris comme étant plutôt :");
+            com.send("fou de sport (tape 1),");
+            com.send("accro à la culture (tape 2),");
+            com.send("passionné de jeux (tape 3)");
             response = com.receive();
         } while(!options.contains(response));
 
