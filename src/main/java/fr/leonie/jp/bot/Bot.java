@@ -8,6 +8,7 @@ import fr.leonie.jp.bot.xml.ImportXML;
 import jdk.jshell.execution.Util;
 
 import javax.swing.text.html.Option;
+import java.io.IOException;
 import java.util.*;
 
 public class Bot {
@@ -42,48 +43,58 @@ public class Bot {
     public void discuss(Communication com) {
         com.send("Bonjour, je suis MeetBot.");
 
-        Optional<String[]> identite;
-        do {
-            identite = this.validatedName(com);
-        } while(identite.isEmpty());
+        Optional<String[]> identite = Optional.empty();
 
-        System.out.println("Connexion avec l'utilisateur " + identite.get()[0] + " " + identite.get()[1]);
-
-        // retrouver l'utilisateur si déjà connu
-        Optional<Utilisateur> utilisateur = this.doWeKnow(com, identite);
-
-        // sinon, on le crée
-        if(utilisateur.isEmpty()){
-            Optional<Integer> age;
+        try {
             do {
-                age = this.validatedAge(com);
-            } while(age.isEmpty());
+                identite = this.validatedName(com);
+            } while (identite.isEmpty());
 
-            Optional<String> ville;
-            do {
-                ville = this.validatedVille(com);
-            } while(ville.isEmpty());
+            System.out.println("Connexion avec l'utilisateur " + identite.get()[0] + " " + identite.get()[1]);
 
-            utilisateur = this.validatedUtilisateur(com, identite, age, ville);
+            // retrouver l'utilisateur si déjà connu
+            Optional<Utilisateur> utilisateur = this.doWeKnow(com, identite);
+
+            // sinon, on le crée
+            if (utilisateur.isEmpty()) {
+                Optional<Integer> age;
+                do {
+                    age = this.validatedAge(com);
+                } while (age.isEmpty());
+
+                Optional<String> ville;
+                do {
+                    ville = this.validatedVille(com);
+                } while (ville.isEmpty());
+
+                utilisateur = this.validatedUtilisateur(com, identite, age, ville);
+            }
+
+            // et on fait plus ample connaissance
+            // attention : si utilisateur deja connu, ne pas redemander ce qu'on sait déjà
+
+
+            // exportXML
+            ExportXML.exportUtilisateurs(listeUtilisateurs);
+
+            if(utilisateur.isPresent()) {
+                com.send("A bientôt " + utilisateur.get().getPrenom() + " " + utilisateur.get().getNom());
+            } else {
+                com.send("A bientôt");
+            }
+            com.send("bye");
+
+            System.out.println("Fin de connexion avec l'utilisateur " + identite.get()[0] + " " + identite.get()[1]);
+
+        } catch (IOException ex) {
+            if (identite.isPresent()) {
+                System.out.println("Connexion Fermée par l'utilisateur " + identite.get()[0] + " " + identite.get()[1]);
+            }
         }
 
-        // et on fait plus ample connaissance
-        // attention : si utilisateur deja connu, ne pas redemander ce qu'on sait déjà
-
-
-        // exportXML
-        ExportXML.exportUtilisateurs(listeUtilisateurs);
-
-        if(utilisateur.isPresent()) {
-            com.send("Au revoir " + utilisateur.get().getPrenom() + " " + utilisateur.get().getNom());
-        } else {
-            com.send("Bye");
-        }
-
-        System.out.println("Fin de connexion avec l'utilisateur " + identite.get()[0] + " " + identite.get()[1]);
     }
 
-    private Optional<String[]> validatedName(Communication com) {
+    private Optional<String[]> validatedName(Communication com) throws IOException {
         com.send("Comment t'appelles-tu ?");
         String response = com.receive();
 
@@ -135,7 +146,7 @@ public class Bot {
         }
     }
 
-    private Optional<Integer> validatedAge(Communication com) {
+    private Optional<Integer> validatedAge(Communication com) throws IOException {
         com.send("Quel âge as-tu ?");
         String response = com.receive();
         try {
@@ -147,7 +158,7 @@ public class Bot {
         }
     }
 
-    private Optional<String> validatedVille(Communication com) {
+    private Optional<String> validatedVille(Communication com) throws IOException {
         com.send("Dans quelle ville vis-tu ?");
         String response = com.receive();
 
@@ -159,7 +170,7 @@ public class Bot {
         }
     }
 
-    private Optional<Utilisateur> validatedUtilisateur(Communication com, Optional<String[]> identite, Optional<Integer> age, Optional<String> ville) {
+    private Optional<Utilisateur> validatedUtilisateur(Communication com, Optional<String[]> identite, Optional<Integer> age, Optional<String> ville) throws IOException {
         String response;
         do {
             com.send("Tu te décris comme étant plutôt : fou de sport (tape 1), accro à la culture (tape 2), passionné de jeux (tape 3)");
@@ -190,7 +201,7 @@ public class Bot {
         return Optional.ofNullable(utilisateur);
     }
 
-    private Optional<Utilisateur> doWeKnow(Communication com, Optional<String[]> identite) {
+    private Optional<Utilisateur> doWeKnow(Communication com, Optional<String[]> identite) throws IOException {
         for(Utilisateur utilisateur : listeUtilisateurs) {
             if(utilisateur.getPrenom().equals(identite.get()[0]) && utilisateur.getNom().equals(identite.get()[1])) {
                 com.send("Etes-vous " + utilisateur.getPrenom() + " " + utilisateur.getNom() + ", " + utilisateur.getAge() + " ans, vivant à " + utilisateur.getVille() + " ?");

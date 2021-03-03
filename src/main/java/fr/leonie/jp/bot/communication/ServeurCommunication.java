@@ -43,14 +43,12 @@ public class ServeurCommunication implements Communication {
     }
 
     @Override
-    public String receive() {
-        String msg = null;
+    public String receive() throws IOException {
+        String msg;
 
-        try {
-            msg = in.readLine();
-        } catch (IOException ex) {
-            System.out.println("I/O error: " + ex.getMessage());
-            ex.printStackTrace();
+        msg = in.readLine();
+        if (msg != null && ToolsCommunication.isEndCommunication(msg)) {
+            throw new IOException();
         }
 
         return msg;
