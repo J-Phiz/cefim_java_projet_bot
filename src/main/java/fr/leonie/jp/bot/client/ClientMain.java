@@ -16,23 +16,22 @@ public class ClientMain {
 
 
     public void run() {
-        final Scanner sc = new Scanner(System.in);
-        String question;
-        String answer;
+
+        Thread txCommunication = new Thread(new ClientTxThread(communication));
+        Thread rxCommunication = new Thread(new ClientRxThread(communication));
 
         communication.open();
 
-        do {
-            // Récupération de la question du bot
-            question = communication.receive();
-            if (question != null) {
-                System.out.println(question);
+        txCommunication.start();
+        rxCommunication.start();
 
-                // Réponse de l'utilisateur et envoi au bot
-                answer = sc.nextLine();
-                communication.send(answer);
-            }
-        } while(question != null);
+        try {
+            txCommunication.join();
+            rxCommunication.join();
+        } catch (InterruptedException ex) {
+            System.out.println("Interrupt erreur: " + ex.getMessage());
+            ex.printStackTrace();
+        }
 
         communication.close();
     }

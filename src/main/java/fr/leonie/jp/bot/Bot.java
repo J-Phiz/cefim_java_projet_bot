@@ -2,6 +2,7 @@ package fr.leonie.jp.bot;
 
 import fr.leonie.jp.bot.communication.Communication;
 import fr.leonie.jp.bot.utilisateurs.*;
+import fr.leonie.jp.bot.constant.Constant;
 import fr.leonie.jp.bot.xml.ExportXML;
 
 import javax.swing.text.html.Option;
@@ -12,10 +13,8 @@ public class Bot {
     private final String nom;
     private final ArrayList<Utilisateur> listeUtilisateurs;
 
-    private final String[] yesAnswersArray = {"oui", "yes", "yep", "ouai", "ouep"};
-    private final String[] noAnswersArray = {"non", "no", "nop", "nan"};
-    private final List<String> yesAnswers = Arrays.asList(yesAnswersArray);
-    private final List<String> noAnswers = Arrays.asList(noAnswersArray);
+    private final List<String> yesAnswers = Arrays.asList(Constant.getYesAnswersArray());
+    private final List<String> noAnswers = Arrays.asList(Constant.getNoAnswersArray());
 
     private final String[] optionsArray = {"1", "2", "3"};
     private final List<String> options = Arrays.asList(optionsArray);

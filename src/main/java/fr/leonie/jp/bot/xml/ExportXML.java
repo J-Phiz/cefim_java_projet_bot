@@ -1,5 +1,6 @@
 package fr.leonie.jp.bot.xml;
 
+import fr.leonie.jp.bot.constant.Constant;
 import fr.leonie.jp.bot.loisirs.Sport;
 import fr.leonie.jp.bot.utilisateurs.Sportif;
 import fr.leonie.jp.bot.utilisateurs.Utilisateur;
@@ -44,7 +45,7 @@ public class ExportXML {
             DOMSource source = new DOMSource(doc);
 
             //write to file
-            StreamResult file = new StreamResult(new File(System.getProperty("user.dir") + "/src/main/java/fr/leonie/jp/bot/utilisateurs.xml"));
+            StreamResult file = new StreamResult(new File(Constant.getXmlPath()));
             transformer.transform(source, file);
 
         } catch (Exception e) {
