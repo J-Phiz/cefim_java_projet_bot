@@ -1,5 +1,6 @@
 package fr.leonie.jp.bot.utilisateurs;
 
+import fr.leonie.jp.bot.bot.BotTools;
 import fr.leonie.jp.bot.communication.Communication;
 import fr.leonie.jp.bot.constant.Constant;
 import fr.leonie.jp.bot.loisirs.Loisir;
@@ -38,28 +39,27 @@ public class Sportif extends Utilisateur {
         super.talkAbout(com);
 
         String response;
+        int choice;
 
-        do {
-            com.send("Tu fais du sport plutôt ?");
-            com.send("en semaine (tape 1),");
-            com.send("le week-end (tape 2)");
-            response = com.receive();
-        } while(!options.contains(response));
-        switch(response) {
-            case "1" :
-                periodeSport = "semaine";
-                break;
-            case "2":
-                periodeSport = "week-end";
-                break;
+        // Question sur la période de Sport
+        String[] msgs = {
+            "Tu fais du sport plutôt ?",
+            "en semaine (tape 1),",
+            "le week-end (tape 2)"
+        };
+        choice = BotTools.responseOption(com, 2, msgs);
+        switch (choice) {
+            case 1 -> periodeSport = "semaine";
+            case 2 -> periodeSport = "week-end";
         }
-        com.send("Tu as raison, en " + periodeSport + " c'est le meilleur moment !");
+        com.send("Moi aussi je préfère ce moment là !");
 
-        com.send("Quand tu fais du sport, ta fréquence cardiaque monte à combien ?");
-        cardioSport = Integer.parseInt(com.receive());
+        // Question sur la fréquence cardiaque durant le Sport
+        cardioSport = BotTools.responseInt(com, "Quand tu fais du sport, ta fréquence cardiaque monte à combien ?");
         com.send("Oh impressionnant");
-        com.send("Et au repos du coup, ta fréquence cardiaque est à combien ?");
-        cardioRepos = Integer.parseInt(com.receive());
+
+        // Question sur la fréquence cardiaque durant le repos
+        cardioRepos = BotTools.responseInt(com, "Et au repos du coup, ta fréquence cardiaque est à combien ?");
     }
 
     public String getPeriodeSport() {

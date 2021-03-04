@@ -2,8 +2,10 @@ package fr.leonie.jp.bot.bot;
 
 import fr.leonie.jp.bot.communication.Communication;
 import fr.leonie.jp.bot.constant.Constant;
+import fr.leonie.jp.bot.loisirs.Loisir;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -77,6 +79,43 @@ public class BotTools {
                 com.send("C'est une question simple, peux-tu répondre par oui ou par non...");
             }
         } while(!correctFormat);
+
+        return result;
+    }
+
+    public static String responseInList(Communication com, ArrayList<Loisir> liste, String msg) throws IOException {
+        String[] msgs = { msg };
+        return responseInList(com, liste, msgs);
+    }
+
+    public static String responseInList(Communication com, ArrayList<Loisir> liste, String[] msgs) throws IOException {
+        String response;
+        String result = "";
+        boolean found = false;
+
+        do {
+            for (String msg : msgs) {
+                com.send(msg);
+            }
+            response = com.receive();
+
+            for (Loisir loisir : liste) {
+               if (loisir.getName().equals(response)) {
+                    found = true;
+                    result = response;
+                    break;
+                }
+            }
+
+            if (!found) {
+                StringBuilder allowedListe = new StringBuilder();
+                com.send("Choisi ton préféré parmi ceux que tu as déjà renseigné :");
+                for (Loisir loisir : liste) {
+                    allowedListe.append(loisir.getName()).append(" ; ");
+                }
+                com.send(allowedListe.toString());
+            }
+        } while(!found);
 
         return result;
     }
