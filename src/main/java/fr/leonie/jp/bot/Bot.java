@@ -73,30 +73,29 @@ public class Bot {
                 utilisateur = this.validatedUtilisateur(com, identite, age, ville);
             }
 
-        // et on fait plus ample connaissance
-        // attention : si utilisateur deja connu, ne pas redemander ce qu'on sait déjà
-        if (utilisateur.isPresent()) {
-            this.getToKnowBetter(com, utilisateur.get());
-        }
-
-        // exportXML
-        ExportXML.exportUtilisateurs(listeUtilisateurs);
-
-            if(utilisateur.isPresent()) {
-                com.send("A bientôt " + utilisateur.get().getPrenom() + " " + utilisateur.get().getNom());
-            } else {
-                com.send("A bientôt");
+            // et on fait plus ample connaissance
+            // attention : si utilisateur deja connu, ne pas redemander ce qu'on sait déjà
+            if (utilisateur.isPresent()) {
+                this.getToKnowBetter(com, utilisateur.get());
             }
-            com.send("bye");
 
-            System.out.println("Fin de connexion avec l'utilisateur " + identite.get()[0] + " " + identite.get()[1]);
+            // exportXML
+            ExportXML.exportUtilisateurs(listeUtilisateurs);
+
+                if(utilisateur.isPresent()) {
+                    com.send("A bientôt " + utilisateur.get().getPrenom() + " " + utilisateur.get().getNom());
+                } else {
+                    com.send("A bientôt");
+                }
+                com.send("bye");
+
+                System.out.println("Fin de connexion avec l'utilisateur " + identite.get()[0] + " " + identite.get()[1]);
 
         } catch (IOException ex) {
             if (identite.isPresent()) {
                 System.out.println("Connexion Fermée par l'utilisateur " + identite.get()[0] + " " + identite.get()[1]);
             }
         }
-
     }
 
     private Optional<String[]> validatedName(Communication com) throws IOException {
@@ -229,7 +228,7 @@ public class Bot {
         return Optional.empty();
     }
 
-    private void getToKnowBetter(Communication com, Utilisateur utilisateur) {
+    private void getToKnowBetter(Communication com, Utilisateur utilisateur) throws IOException {
         String categoryDeLoisir = utilisateur.getLoisirCategory();
         Integer nbLoisirs = null;
         while(nbLoisirs == null) {
