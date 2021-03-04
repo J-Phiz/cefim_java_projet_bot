@@ -1,4 +1,4 @@
-package fr.leonie.jp.bot;
+package fr.leonie.jp.bot.bot;
 
 import fr.leonie.jp.bot.communication.Communication;
 import fr.leonie.jp.bot.loisirs.Jeu;
@@ -9,11 +9,8 @@ import fr.leonie.jp.bot.utilisateurs.*;
 import fr.leonie.jp.bot.constant.Constant;
 import fr.leonie.jp.bot.xml.ExportXML;
 import fr.leonie.jp.bot.xml.ImportXML;
-import jdk.jshell.execution.Util;
 
-import javax.swing.text.html.Option;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.util.*;
 
 public class Bot {
