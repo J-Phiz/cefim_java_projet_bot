@@ -179,8 +179,7 @@ public class Bot {
         do {
             com.send("Tu te décris comme étant plutôt :");
             com.send("fou de sport (tape 1),");
-            com.send("accro à la culture (tape 2),");
-            com.send("passionné de jeux (tape 3)");
+            com.send("passionné de jeux (tape 2)");
             response = com.receive();
         } while(!options.contains(response));
 
@@ -196,9 +195,6 @@ public class Bot {
                     utilisateur = new Sportif(nomF, prenom, ageFinal, villeFinale);
                     break;
                 case "2":
-                    utilisateur = new GrosseTete(nomF, prenom, ageFinal, villeFinale);
-                    break;
-                case "3":
                     utilisateur = new Joueur(nomF, prenom, ageFinal, villeFinale);
                     break;
             }

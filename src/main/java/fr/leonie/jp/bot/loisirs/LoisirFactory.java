@@ -13,10 +13,6 @@ public class LoisirFactory {
                 case "jeu":
                     loisir = new Jeu(nom, nbParticipants);
                     break;
-                case "lecture":
-                case "cinema":
-                    //
-                    break;
             }
         } catch (IllegalArgumentException e) {
             //System.out.println(e.getMessage());

@@ -22,7 +22,6 @@ public class ImportXML {
 
             doc.getDocumentElement().normalize();
             NodeList listeSportifs = doc.getElementsByTagName("Sportif");
-            NodeList listeGrossesTetes = doc.getElementsByTagName("GrosseTete");
             NodeList listeJoueurs = doc.getElementsByTagName("Joueur");
 
             for (int temp = 0; temp < listeSportifs.getLength(); temp++) {
@@ -50,48 +49,6 @@ public class ImportXML {
                     }
 
                     listeUtilisateurs.add(sportif);
-                }
-            }
-
-            for (int temp = 0; temp < listeGrossesTetes.getLength(); temp++) {
-
-                Node nNode = listeGrossesTetes.item(temp);
-
-                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-                    Element eElement = (Element) nNode;
-                    GrosseTete grosseTete = new GrosseTete(eElement.getElementsByTagName("name").item(0).getTextContent(), eElement.getElementsByTagName("firstname").item(0).getTextContent(), Integer.parseInt(eElement.getElementsByTagName("age").item(0).getTextContent()), eElement.getElementsByTagName("town").item(0).getTextContent());
-
-                    NodeList nFilms = eElement.getElementsByTagName("films");
-                    if(nFilms.getLength() > 0) {
-                        NodeList listeFilms = nFilms.item(0).getChildNodes();
-                        ArrayList<String> films = new ArrayList<>();
-                        for(int i = 0; i < listeFilms.getLength(); i++) {
-                            films.add(listeFilms.item(i).getTextContent());
-                        }
-                        grosseTete.setFilms(films);
-                    }
-
-                    NodeList nLivres = eElement.getElementsByTagName("livres");
-                    if(nLivres.getLength() > 0) {
-                        NodeList listeLivres = nLivres.item(0).getChildNodes();
-                        ArrayList<String> livres = new ArrayList<>();
-                        for (int i = 0; i < listeLivres.getLength(); i++) {
-                            livres.add(listeLivres.item(i).getTextContent());
-                        }
-                        grosseTete.setLivres(livres);
-                    }
-
-                    NodeList nMusees = eElement.getElementsByTagName("musees");
-                    if(nMusees.getLength() > 0) {
-                        NodeList listeMusees = nMusees.item(0).getChildNodes();
-                        ArrayList<String> musees = new ArrayList<>();
-                        for (int i = 0; i < listeMusees.getLength(); i++) {
-                            musees.add(listeMusees.item(i).getTextContent());
-                        }
-                        grosseTete.setMusees(musees);
-                    }
-
-                    listeUtilisateurs.add(grosseTete);
                 }
             }
 
