@@ -1,9 +1,7 @@
 package fr.leonie.jp.bot.serveur;
 
-import fr.leonie.jp.bot.Bot;
+import fr.leonie.jp.bot.bot.Bot;
 import fr.leonie.jp.bot.communication.Communication;
-
-import java.util.Objects;
 
 public class ServeurThread extends Thread {
 

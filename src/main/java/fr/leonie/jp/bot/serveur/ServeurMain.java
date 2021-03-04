@@ -1,6 +1,5 @@
 package fr.leonie.jp.bot.serveur;
 
-import fr.leonie.jp.bot.Bot;
 import fr.leonie.jp.bot.communication.Communication;
 import fr.leonie.jp.bot.communication.ServeurCommunication;
 import fr.leonie.jp.bot.constant.Constant;
