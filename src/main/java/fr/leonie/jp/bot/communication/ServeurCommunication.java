@@ -15,6 +15,7 @@ public class ServeurCommunication implements Communication {
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
+    private boolean wantToClose;
 
 
     public ServeurCommunication(ServerSocket serverSocket) {
@@ -42,14 +43,12 @@ public class ServeurCommunication implements Communication {
     }
 
     @Override
-    public String receive() {
-        String msg = null;
+    public String receive() throws IOException {
+        String msg;
 
-        try {
-            msg = in.readLine();
-        } catch (IOException ex) {
-            System.out.println("I/O error: " + ex.getMessage());
-            ex.printStackTrace();
+        msg = in.readLine();
+        if (msg != null && ToolsCommunication.isEndCommunication(msg)) {
+            throw new IOException();
         }
 
         return msg;
@@ -64,5 +63,16 @@ public class ServeurCommunication implements Communication {
             System.out.println("I/O error: " + ex.getMessage());
             ex.printStackTrace();
         }
+    }
+
+    @Override
+    public void closeRequest(boolean wantToClose) {
+        this.wantToClose = wantToClose;
+
+    }
+
+    @Override
+    public boolean isCloseRequested() {
+        return wantToClose;
     }
 }

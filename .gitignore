@@ -27,3 +27,4 @@ hs_err_pid*
 target/
 out/
 java-bot.iml
+src/main/java/fr/leonie/jp/bot/utilisateurs.xml
