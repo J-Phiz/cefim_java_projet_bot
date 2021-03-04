@@ -26,8 +26,7 @@ public class Bot {
     private final List<String> yesAnswers = Arrays.asList(Constant.getYesAnswersArray());
     private final List<String> noAnswers = Arrays.asList(Constant.getNoAnswersArray());
 
-    private final String[] optionsArray = {"1", "2", "3"};
-    private final List<String> options = Arrays.asList(optionsArray);
+    private final List<String> options = Arrays.asList(Constant.getOptionsArray());
 
     private Bot() {
         nom = "MeetBot";
@@ -278,7 +277,6 @@ public class Bot {
                 } while(loisir.isEmpty());
             }
 
-
             utilisateur.getListeLoisirs().add(loisir.get());
             if(loisir.get().getClass().getSimpleName().equals("Sport")) {
                 listeSports.add((Sport) loisir.get());
@@ -286,6 +284,8 @@ public class Bot {
                 listeJeux.add((Jeu) loisir.get());
             }
         }
+
+        utilisateur.talkAbout(com);
     }
 
     private <T extends Loisir> Optional<T> doIKnowThisHobby(String categoryDeLoisir, String nom) {
