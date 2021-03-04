@@ -32,34 +32,42 @@ public class Joueur extends Utilisateur {
         int choice;
         boolean yesNo;
 
-        // Question sur la période de Jeu
-        String[] msgs = {
-                "Tu joues plutôt ?",
-                "en journée (tape 1),",
-                "en soirée (tape 2)"
-        };
-        choice = BotTools.responseOption(com, 2, msgs);
-        switch (choice) {
-            case 1 -> periodeJeu = "journée";
-            case 2 -> periodeJeu = "soirée";
-        }
-        com.send("Tu as raison, en " + periodeJeu + " c'est le meilleur moment !");
-
-        // Question sur le nb personnes lors des jeux
-        moyenneNbPers = BotTools.responseInt(com, "En moyenne, tu joues avec combien de personnes ?");
-
-        // Question manger
-        if(BotTools.responseYesNo(com, "Quand tu joues, tu grignottes ?")) {
-            com.send("Et du coup tu manges quoi ?");
-            mange = com.receive();
-        } else {
-            mange = "rien";
-            com.send("Tu devrais essayer c'est sympa !");
+        if(Constant.isNullOrEmpty(periodeJeu)) {
+            // Question sur la période de Jeu
+            String[] msgs = {
+                    "Tu joues plutôt ?",
+                    "en journée (tape 1),",
+                    "en soirée (tape 2)"
+            };
+            choice = BotTools.responseOption(com, 2, msgs);
+            switch (choice) {
+                case 1 -> periodeJeu = "journée";
+                case 2 -> periodeJeu = "soirée";
+            }
+            com.send("Tu as raison, en " + periodeJeu + " c'est le meilleur moment !");
         }
 
-        // Question boire
-        com.send("Quand tu joues, tu bois quoi ?");
-        bois = com.receive();
+        if(moyenneNbPers == 0) {
+            // Question sur le nb personnes lors des jeux
+            moyenneNbPers = BotTools.responseInt(com, "En moyenne, tu joues avec combien de personnes ?");
+        }
+
+        if(Constant.isNullOrEmpty(mange)) {
+            // Question manger
+            if(BotTools.responseYesNo(com, "Quand tu joues, tu grignottes ?")) {
+                com.send("Et du coup tu manges quoi ?");
+                mange = com.receive();
+            } else {
+                mange = "rien";
+                com.send("Tu devrais essayer c'est sympa !");
+            }
+        }
+
+        if(Constant.isNullOrEmpty(bois)) {
+            // Question boire
+            com.send("Quand tu joues, tu bois quoi ?");
+            bois = com.receive();
+        }
     }
 
     @Override

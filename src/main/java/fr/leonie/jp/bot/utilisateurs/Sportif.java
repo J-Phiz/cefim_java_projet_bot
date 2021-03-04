@@ -41,25 +41,31 @@ public class Sportif extends Utilisateur {
         String response;
         int choice;
 
-        // Question sur la période de Sport
-        String[] msgs = {
-            "Tu fais du sport plutôt ?",
-            "en semaine (tape 1),",
-            "le week-end (tape 2)"
-        };
-        choice = BotTools.responseOption(com, 2, msgs);
-        switch (choice) {
-            case 1 -> periodeSport = "semaine";
-            case 2 -> periodeSport = "week-end";
+        if(Constant.isNullOrEmpty(periodeSport)) {
+            // Question sur la période de Sport
+            String[] msgs = {
+                    "Tu fais du sport plutôt ?",
+                    "en semaine (tape 1),",
+                    "le week-end (tape 2)"
+            };
+            choice = BotTools.responseOption(com, 2, msgs);
+            switch (choice) {
+                case 1 -> periodeSport = "semaine";
+                case 2 -> periodeSport = "week-end";
+            }
+            com.send("Moi aussi je préfère ce moment là !");
         }
-        com.send("Moi aussi je préfère ce moment là !");
 
-        // Question sur la fréquence cardiaque durant le Sport
-        cardioSport = BotTools.responseInt(com, "Quand tu fais du sport, ta fréquence cardiaque monte à combien ?");
-        com.send("Oh impressionnant");
+        if(cardioSport == 0) {
+            // Question sur la fréquence cardiaque durant le Sport
+            cardioSport = BotTools.responseInt(com, "Quand tu fais du sport, ta fréquence cardiaque monte à combien ?");
+            com.send("Oh impressionnant");
+        }
 
-        // Question sur la fréquence cardiaque durant le repos
-        cardioRepos = BotTools.responseInt(com, "Et au repos du coup, ta fréquence cardiaque est à combien ?");
+        if(cardioRepos == 0) {
+            // Question sur la fréquence cardiaque durant le repos
+            cardioRepos = BotTools.responseInt(com, "Et au repos du coup, ta fréquence cardiaque est à combien ?");
+        }
     }
 
     public String getPeriodeSport() {

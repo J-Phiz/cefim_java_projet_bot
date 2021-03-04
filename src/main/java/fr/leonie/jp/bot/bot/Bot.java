@@ -20,11 +20,6 @@ public class Bot {
     private final ArrayList<Sport> listeSports;
     private final ArrayList<Jeu> listeJeux;
 
-    private final List<String> yesAnswers = Arrays.asList(Constant.getYesAnswersArray());
-    private final List<String> noAnswers = Arrays.asList(Constant.getNoAnswersArray());
-
-    private final List<String> options = Arrays.asList(Constant.getOptionsArray());
-
     private Bot() {
         nom = "MeetBot";
         listeUtilisateurs = new ArrayList<>();
@@ -224,67 +219,72 @@ public class Bot {
     }
 
     private void getToKnowBetter(Communication com, Utilisateur utilisateur) throws IOException {
-        String response = "";
-        // Question existentielle
-        String[] msgs = {
-                "Avant tout, je voudrais savoir : plutôt bain ou douche ?",
-                "les douches c'est la vie (tape 1),",
-                "les bains c'est trop bien (tape 2)"
-        };
-        int choice = BotTools.responseOption(com, 2, msgs);
-        switch (choice) {
-            case 1 -> response = "douche";
-            case 2 -> response = "bain";
-        }
-        utilisateur.setSdb(response);
-        if(utilisateur.getSdb().equals("douche")) {
-            com.send("Excellent choix car les baignoires ça fuit !!!!");
-        } else {
-            com.send("Ahh fais attention les baignoires ça fuit !!!!");
+        if(Constant.isNullOrEmpty(utilisateur.getSdb())) {
+            String response = "";
+            // Question existentielle
+            String[] msgs = {
+                    "Avant tout, je voudrais savoir : plutôt bain ou douche ?",
+                    "les douches c'est la vie (tape 1),",
+                    "les bains c'est trop bien (tape 2)"
+            };
+            int choice = BotTools.responseOption(com, 2, msgs);
+            switch (choice) {
+                case 1 -> response = "douche";
+                case 2 -> response = "bain";
+            }
+            utilisateur.setSdb(response);
+            if(utilisateur.getSdb().equals("douche")) {
+                com.send("Excellent choix car les baignoires ça fuit !!!!");
+            } else {
+                com.send("Ahh fais attention les baignoires ça fuit !!!!");
+            }
         }
 
         String categoryDeLoisir = utilisateur.getLoisirCategory();
-        int nbLoisirs = BotTools.responseInt(com, "De combien de " + categoryDeLoisir.toLowerCase() + "(s/x) veux-tu me parler ?");
+        if(BotTools.responseYesNo(com,"Tu veux ajouter des " + categoryDeLoisir.toLowerCase() + "(s/x) à ton profil ?")) {
+            int nbLoisirs = BotTools.responseInt(com, "De combien de " + categoryDeLoisir.toLowerCase() + "(s/x) veux-tu me parler ?");
+            for(int i = 0; i < nbLoisirs; i++) {
+                com.send("Quel est le nom de ton " + categoryDeLoisir.toLowerCase() + " ?");
+                String nom = com.receive();
 
-        for(int i = 0; i < nbLoisirs; i++) {
-            com.send("Quel est le nom de ton " + categoryDeLoisir.toLowerCase() + " ?");
-            String nom = com.receive();
+                // chercher dans la liste des loisirs...
+                Optional<? extends Loisir> loisir = this.doIKnowThisHobby(categoryDeLoisir, nom);
+                boolean newHobby = false;
 
-            // chercher dans la liste des loisirs...
-            Optional<? extends Loisir> loisir = this.doIKnowThisHobby(categoryDeLoisir, nom);
-            boolean newHobby = false;
+                if(loisir.isEmpty()) {
+                    newHobby = true;
+                    int nbParticipants;
 
-            if(loisir.isEmpty()) {
-                newHobby = true;
-                int nbParticipants;
-
-                if(BotTools.responseYesNo(com,"Je ne connais pas, tu fais ça seul ?")) {
-                    nbParticipants = 1;
+                    if(BotTools.responseYesNo(com,"Je ne connais pas, tu fais ça seul ?")) {
+                        nbParticipants = 1;
+                    } else {
+                        nbParticipants = BotTools.responseInt(com, "A combien alors ?");
+                    }
+                    loisir = Optional.of(LoisirFactory.getLoisir(nom, nbParticipants, categoryDeLoisir));
                 } else {
-                    nbParticipants = BotTools.responseInt(com, "A combien alors ?");
+                    com.send("C'est un excellent choix");
                 }
-                loisir = Optional.of(LoisirFactory.getLoisir(nom, nbParticipants, categoryDeLoisir));
-            } else {
-                com.send("C'est un excellent choix");
-            }
 
-            if(newHobby) {
-                if(loisir.get().getClass().getSimpleName().equals("Sport")) {
-                    listeSports.add((Sport) loisir.get());
-                } else if(loisir.get().getClass().getSimpleName().equals("Jeu")) {
-                    listeJeux.add((Jeu) loisir.get());
+                if(newHobby) {
+                    if(loisir.get().getClass().getSimpleName().equals("Sport")) {
+                        listeSports.add((Sport) loisir.get());
+                    } else if(loisir.get().getClass().getSimpleName().equals("Jeu")) {
+                        listeJeux.add((Jeu) loisir.get());
+                    }
+                }
+
+                Loisir loisirFinal = loisir.get();
+
+                if(utilisateur.getListeLoisirs().stream().noneMatch(l -> l.equals(loisirFinal))) {
+                    utilisateur.getListeLoisirs().add(loisir.get());
+                }
+
+                if(i < nbLoisirs-1) {
+                    com.send("Passons à la suite tu veux bien...");
                 }
             }
-
-            Loisir loisirFinal = loisir.get();
-
-            if(utilisateur.getListeLoisirs().stream().noneMatch(l -> l.equals(loisirFinal))) {
-                utilisateur.getListeLoisirs().add(loisir.get());
-            }
-
-            if(i < nbLoisirs-1) {
-                com.send("Passons à la suite tu veux bien...");
-            }
+        } else {
+            com.send("Peut-être la prochaine fois :)");
         }
 
         utilisateur.talkAbout(com);

@@ -74,11 +74,14 @@ public abstract class Utilisateur {
     public void talkAbout(Communication com) throws IOException {
         String type = getLoisirCategory();
 
-        loisirPrefere = BotTools.responseInList(com, this.getListeLoisirs(), "Quel est ton " + type + " préféré ?");
-        com.send("Moi aussi j'adore !");
-
-        frequence = BotTools.responseInt(com, "En moyenne, tu " + (type.compareTo(Jeu.getCategory()) == 0 ? "joues" : "en fais") + " combien d'heures par semaine ?");
-        com.send("Ah c'est pas mal");
+        if(Constant.isNullOrEmpty(loisirPrefere)) {
+            loisirPrefere = BotTools.responseInList(com, this.getListeLoisirs(), "Quel est ton " + type + " préféré ?");
+            com.send("Moi aussi j'adore !");
+        }
+        if(frequence == 0) {
+            frequence = BotTools.responseInt(com, "En moyenne, tu " + (type.compareTo(Jeu.getCategory()) == 0 ? "joues" : "en fais") + " combien d'heures par semaine ?");
+            com.send("Ah c'est pas mal");
+        }
     }
 
     @Override

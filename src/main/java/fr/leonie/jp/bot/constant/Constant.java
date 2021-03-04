@@ -41,4 +41,8 @@ public class Constant {
     public static String[] getOptionsArray() {
         return OPTIONS_ARRAY;
     }
+
+    public static boolean isNullOrEmpty(String string) {
+        return string == null || string.trim().isEmpty();
+    }
 }
