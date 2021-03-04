@@ -12,6 +12,7 @@ import java.util.List;
 public class Joueur extends Utilisateur {
     private ArrayList<Jeu> jeux;
     private String periodeJeu;
+    private int moyenneNbPers;
     private String mange;
     private String bois;
 
@@ -31,7 +32,7 @@ public class Joueur extends Utilisateur {
         String response;
 
         do {
-            com.send("Tu joues plutôt quand ?");
+            com.send("Tu joues plutôt ?");
             com.send("en journée (tape 1),");
             com.send("en soirée (tape 2)");
             response = com.receive();
@@ -45,6 +46,14 @@ public class Joueur extends Utilisateur {
                 break;
         }
         com.send("Tu as raison, en " + periodeJeu + " c'est le meilleur moment !");
+
+        com.send("En moyenne, tu joues avec combien de personnes ?");
+        response = com.receive();
+        try {
+            moyenneNbPers = new Integer(response);
+        } catch(NumberFormatException e) {
+            com.send("Une réponse avec des chiffres stp...");
+        }
 
         com.send("Quand tu joues, tu grignottes ?");
         response = com.receive();
@@ -74,6 +83,10 @@ public class Joueur extends Utilisateur {
 
     public String getPeriodeJeu() {
         return periodeJeu;
+    }
+
+    public int getMoyenneNbPers() {
+        return moyenneNbPers;
     }
 
     public String getMange() {

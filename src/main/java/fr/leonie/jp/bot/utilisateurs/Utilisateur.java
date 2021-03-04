@@ -18,7 +18,6 @@ public abstract class Utilisateur {
     private final List<String> options = Arrays.asList(Constant.getOptionsArray());
     private int frequence;
     private String jeuPrefere;
-    private int moyenneNbPers;
 
     protected Utilisateur(String pNom, String pPrenom, int pAge, String pVille) {
         nom = pNom;
@@ -51,10 +50,6 @@ public abstract class Utilisateur {
         return jeuPrefere;
     }
 
-    public int getMoyenneNbPers() {
-        return moyenneNbPers;
-    }
-
     public abstract ArrayList<? extends Loisir> getListeLoisirs();
 
     public abstract String getLoisirCategory();
@@ -66,6 +61,7 @@ public abstract class Utilisateur {
         com.send("Quel est ton " + type + " préféré ?");
         jeuPrefere = com.receive();
         com.send("Moi aussi j'adore !");
+
         com.send("En moyenne, tu " + (type.compareTo(Jeu.getCategory()) == 0 ? "joues" : "en fais") + " combien d'heures par semaine ?");
         response = com.receive();
         try {
@@ -74,13 +70,6 @@ public abstract class Utilisateur {
             com.send("Une réponse avec des chiffres stp...");
         }
         com.send("Ah c'est pas mal");
-        com.send("En moyenne, tu " + (type.compareTo(Jeu.getCategory()) == 0 ? "joues" : "en fais") + " avec combien de personnes ?");
-        response = com.receive();
-        try {
-            moyenneNbPers = new Integer(response);
-        } catch(NumberFormatException e) {
-            com.send("Une réponse avec des chiffres stp...");
-        }
     }
 
     @Override
