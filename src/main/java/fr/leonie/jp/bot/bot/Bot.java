@@ -237,6 +237,11 @@ public class Bot {
             case 2 -> response = "bain";
         }
         utilisateur.setSdb(response);
+        if(utilisateur.getSdb().equals("douche")) {
+            com.send("Excellent choix car les baignoires ça fuit !!!!");
+        } else {
+            com.send("Ahh fais attention les baignoires ça fuit !!!!");
+        }
 
         String categoryDeLoisir = utilisateur.getLoisirCategory();
         int nbLoisirs = BotTools.responseInt(com, "De combien de " + categoryDeLoisir.toLowerCase() + "(s/x) veux-tu me parler ?");
