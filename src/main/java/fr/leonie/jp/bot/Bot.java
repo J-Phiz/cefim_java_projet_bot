@@ -258,10 +258,12 @@ public class Bot {
 
             // chercher dans la liste des loisirs...
             Optional<? extends Loisir> loisir = this.doIKnowThisHobby(categoryDeLoisir, nom);
+            boolean newHobby = false;
 
             if(loisir.isEmpty()) {
                 do {
                     com.send("Je ne connais pas, tu fais ça seul ?");
+                    newHobby = true;
                     String solo = com.receive();
                     int nbParticipants = 1;
 
@@ -277,11 +279,18 @@ public class Bot {
                 } while(loisir.isEmpty());
             }
 
-            utilisateur.getListeLoisirs().add(loisir.get());
-            if(loisir.get().getClass().getSimpleName().equals("Sport")) {
-                listeSports.add((Sport) loisir.get());
-            } else if(loisir.get().getClass().getSimpleName().equals("Jeu")) {
-                listeJeux.add((Jeu) loisir.get());
+            if(newHobby) {
+                if(loisir.get().getClass().getSimpleName().equals("Sport")) {
+                    listeSports.add((Sport) loisir.get());
+                } else if(loisir.get().getClass().getSimpleName().equals("Jeu")) {
+                    listeJeux.add((Jeu) loisir.get());
+                }
+            }
+
+            Loisir loisirFinal = loisir.get();
+
+            if(utilisateur.getListeLoisirs().stream().noneMatch(l -> l.equals(loisirFinal))) {
+                utilisateur.getListeLoisirs().add(loisir.get());
             }
         }
 
@@ -291,15 +300,17 @@ public class Bot {
     private <T extends Loisir> Optional<T> doIKnowThisHobby(String categoryDeLoisir, String nom) {
         ArrayList<? extends Loisir> listeLoisirs = new ArrayList<>();
         switch(categoryDeLoisir) {
-            case "Jeu":
+            case "jeu":
                 listeLoisirs = listeJeux;
                 break;
-            case "Sport":
+            case "sport":
                 listeLoisirs = listeSports;
                 break;
         }
 
         for(int i = 0; i < listeLoisirs.size(); i++) {
+            System.out.println("ici : " + listeLoisirs.get(i).getName());
+
             if(listeLoisirs.get(i).getName().equalsIgnoreCase(nom)) {
                 return Optional.of((T) listeLoisirs.get(i));
             }

@@ -1,9 +1,10 @@
 package fr.leonie.jp.bot.loisirs;
 
+import java.util.Objects;
+
 public class Loisir {
     private final String name;
     private final int nbParticipants;
-    private String theme;
 
     public Loisir(String pName, int pNbParticipants) {
         name = pName;
@@ -16,5 +17,13 @@ public class Loisir {
 
     public int getNbParticipants() {
         return nbParticipants;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Loisir loisir = (Loisir) o;
+        return name.equals(loisir.name);
     }
 }

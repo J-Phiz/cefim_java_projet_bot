@@ -12,7 +12,6 @@ import java.util.List;
 
 public class Joueur extends Utilisateur {
     private ArrayList<Loisir> jeux;
-    private ArrayList<Jeu> jeux;
     private String periodeJeu;
     private int moyenneNbPers;
     private String mange;
