@@ -43,10 +43,6 @@ public class Bot {
         return nom;
     }
 
-    public ArrayList<Utilisateur> getListeUtilisateurs() {
-        return listeUtilisateurs;
-    }
-
     public void discuss(Communication com) {
         com.send("Bonjour, je suis " + this.getNom());
 
@@ -64,10 +60,7 @@ public class Bot {
 
             // sinon, on le crée
             if (utilisateur.isEmpty()) {
-                Optional<Integer> age;
-                do {
-                    age = this.validatedAge(com);
-                } while (age.isEmpty());
+                int age = this.validatedAge(com);
 
                 Optional<String> ville;
                 do {
@@ -123,9 +116,7 @@ public class Bot {
         if(splitResponse.length == 2){
             return Optional.of(splitResponse);
         } else if(splitResponse.length == 1) {
-            com.send("C'est ton prénom ?");
-            response = com.receive();
-            if(yesAnswers.contains(response.toLowerCase())) {
+            if(BotTools.responseYesNo(com, "C'est ton prénom ?")) {
                 String prenom = splitResponse[0];
                 com.send("Et quel est ton nom ?");
                 response = com.receive();
@@ -135,10 +126,8 @@ public class Bot {
                 } else {
                     return Optional.of(new String[]{prenom, response});
                 }
-            } else if (noAnswers.contains(response.toLowerCase())) {
-                com.send("Alors c'est ton nom ?");
-                response = com.receive();
-                if(yesAnswers.contains(response.toLowerCase())) {
+            } else {
+                if(BotTools.responseYesNo(com, "Alors c'est ton nom ?")) {
                     String nomF = splitResponse[0];
                     com.send("Et quel est ton prénom ?");
                     response = com.receive();
@@ -152,9 +141,6 @@ public class Bot {
                     com.send("Tu te moques de moi !!");
                     return Optional.empty();
                 }
-            } else {
-                com.send("C'est une question simple, peux-tu répondre par oui ou par non...");
-                return Optional.empty();
             }
         } else {
             com.send("C'est un nom ça ?!?");
@@ -162,16 +148,8 @@ public class Bot {
         }
     }
 
-    private Optional<Integer> validatedAge(Communication com) throws IOException {
-        com.send("Quel âge as-tu ?");
-        String response = com.receive();
-        try {
-            Integer age = new Integer(response);
-            return Optional.of(age);
-        } catch(NumberFormatException e) {
-            com.send("Un age avec des chiffres stp...");
-            return Optional.empty();
-        }
+    private int validatedAge(Communication com) throws IOException {
+        return BotTools.responseInt(com, "Quel âge as-tu ?");
     }
 
     private Optional<String> validatedVille(Communication com) throws IOException {
@@ -186,27 +164,31 @@ public class Bot {
         }
     }
 
-    private Optional<Utilisateur> validatedUtilisateur(Communication com, Optional<String[]> identite, Optional<Integer> age, Optional<String> ville) throws IOException {
-        String response;
-        do {
-            com.send("Tu te décris comme étant plutôt :");
-            com.send("fou de sport (tape 1),");
-            com.send("passionné de jeux (tape 2)");
-            response = com.receive();
-        } while(!options.contains(response));
+    private Optional<Utilisateur> validatedUtilisateur(Communication com, Optional<String[]> identite, int age, Optional<String> ville) throws IOException {
+        String response = "";
+        String[] msgs = {
+                "Tu te décris comme étant plutôt :",
+                "fou de sport (tape 1),",
+                "passionné de jeux (tape 2)"
+        };
+        int choice = BotTools.responseOption(com, 2, msgs);
+        switch (choice) {
+            case 1 -> response = "sport";
+            case 2 -> response = "jeu";
+        }
 
         Utilisateur utilisateur = null;
-        if(identite.isPresent() && identite.get().length == 2 && age.isPresent() && ville.isPresent()) {
+        if(identite.isPresent() && identite.get().length == 2 && ville.isPresent()) {
             String prenom = identite.get()[0];
             String nomF = identite.get()[1];
-            int ageFinal = age.get();
+            int ageFinal = age;
             String villeFinale = ville.get();
 
             switch(response) {
-                case "1" :
+                case "sport" :
                     utilisateur = new Sportif(nomF, prenom, ageFinal, villeFinale);
                     break;
-                case "2":
+                case "jeu":
                     utilisateur = new Joueur(nomF, prenom, ageFinal, villeFinale);
                     break;
             }
@@ -222,23 +204,17 @@ public class Bot {
     private Optional<Utilisateur> doWeKnow(Communication com, Optional<String[]> identite) throws IOException {
         for(Utilisateur utilisateur : listeUtilisateurs) {
             if(utilisateur.getPrenom().equalsIgnoreCase(identite.get()[0]) && utilisateur.getNom().equalsIgnoreCase(identite.get()[1])) {
-                com.send("Etes-vous " + utilisateur.getPrenom() + " " + utilisateur.getNom() + ", " + utilisateur.getAge() + " ans, vivant à " + utilisateur.getVille() + " ?");
-                String response = com.receive();
-                if(yesAnswers.contains(response.toLowerCase())) {
+                if(BotTools.responseYesNo(com, "Etes-vous " + utilisateur.getPrenom() + " " + utilisateur.getNom() + ", " + utilisateur.getAge() + " ans, vivant à " + utilisateur.getVille() + " ?")) {
                     com.send("Ravi de te retrouver !");
                     if(utilisateur.getLoisirPrefere() != null) {
-                        com.send("Tu aimes toujours le/la " + utilisateur.getLoisirPrefere() + " ?");
-                        response = com.receive();
-                        if(yesAnswers.contains(response.toLowerCase())) {
+                        if(BotTools.responseYesNo(com,"Tu aimes toujours le/la " + utilisateur.getLoisirPrefere() + " ?")) {
                             com.send("C'est une excellente nouvelle !");
-                        } else if(noAnswers.contains(response.toLowerCase())) {
-                            com.send("Dommage, on en reparle plus tard alors");
                         } else {
-                            com.send("C'était pas trop dur comme question pourtant, ça commence bien ...");
+                            com.send("Dommage, on en reparle plus tard alors");
                         }
                     }
                     return Optional.of(utilisateur);
-                } else if(noAnswers.contains(response.toLowerCase())) {
+                } else {
                     com.send("Ah, j'ai dû confondre...");
                 }
             }
@@ -248,24 +224,22 @@ public class Bot {
     }
 
     private void getToKnowBetter(Communication com, Utilisateur utilisateur) throws IOException {
-        String response = "0";
-        while(!response.equals("bain") && !response.equals("douche")) {
-            com.send("Avant tout, je voudrais savoir : plutôt bain ou douche ?");
-            response = com.receive();
+        String response = "";
+        // Question existentielle
+        String[] msgs = {
+                "Avant tout, je voudrais savoir : plutôt bain ou douche ?",
+                "les douches c'est la vie (tape 1),",
+                "les bains c'est trop bien (tape 2)"
+        };
+        int choice = BotTools.responseOption(com, 2, msgs);
+        switch (choice) {
+            case 1 -> response = "douche";
+            case 2 -> response = "bain";
         }
         utilisateur.setSdb(response);
 
         String categoryDeLoisir = utilisateur.getLoisirCategory();
-        Integer nbLoisirs = null;
-        while(nbLoisirs == null) {
-            com.send("De combien de " + categoryDeLoisir.toLowerCase() + "(s/x) veux-tu me parler ?");
-            response = com.receive();
-            try {
-               nbLoisirs = new Integer(response);
-            } catch(NumberFormatException e) {
-                com.send("Une réponse avec des chiffres stp...");
-            }
-        };
+        int nbLoisirs = BotTools.responseInt(com, "De combien de " + categoryDeLoisir.toLowerCase() + "(s/x) veux-tu me parler ?");
 
         for(int i = 0; i < nbLoisirs; i++) {
             com.send("Quel est le nom de ton " + categoryDeLoisir.toLowerCase() + " ?");
@@ -276,22 +250,17 @@ public class Bot {
             boolean newHobby = false;
 
             if(loisir.isEmpty()) {
-                do {
-                    com.send("Je ne connais pas, tu fais ça seul ?");
-                    newHobby = true;
-                    String solo = com.receive();
-                    int nbParticipants = 1;
+                newHobby = true;
+                int nbParticipants;
 
-                    if(noAnswers.contains(solo.toLowerCase())) {
-                        com.send("A combien alors ?");
-                        nbParticipants = Integer.parseInt(com.receive());
-                        loisir = Optional.of(LoisirFactory.getLoisir(nom, nbParticipants, categoryDeLoisir));
-                    } else if (!yesAnswers.contains(solo.toLowerCase())) {
-                        com.send("C'est une question simple, peux-tu répondre par oui ou par non...");
-                    } else {
-                        loisir = Optional.of(LoisirFactory.getLoisir(nom, nbParticipants, categoryDeLoisir));
-                    }
-                } while(loisir.isEmpty());
+                if(BotTools.responseYesNo(com,"Je ne connais pas, tu fais ça seul ?")) {
+                    nbParticipants = 1;
+                } else {
+                    nbParticipants = BotTools.responseInt(com, "A combien alors ?");
+                }
+                loisir = Optional.of(LoisirFactory.getLoisir(nom, nbParticipants, categoryDeLoisir));
+            } else {
+                com.send("C'est un excellent choix");
             }
 
             if(newHobby) {
@@ -306,6 +275,10 @@ public class Bot {
 
             if(utilisateur.getListeLoisirs().stream().noneMatch(l -> l.equals(loisirFinal))) {
                 utilisateur.getListeLoisirs().add(loisir.get());
+            }
+
+            if(i < nbLoisirs-1) {
+                com.send("Passons à la suite tu veux bien...");
             }
         }
 

@@ -75,6 +75,11 @@ public class ExportXML {
         //create age element
         user.appendChild(getFilledElement(doc,"age", Integer.toString(utilisateur.getAge())));
 
+        //create sdb element
+        if(utilisateur.getSdb() != null && !utilisateur.getSdb().trim().isEmpty()) {
+            user.appendChild(getFilledElement(doc, "sdb", utilisateur.getSdb()));
+        }
+
         //create frequence element
         if(utilisateur.getFrequence() > 0) {
             user.appendChild(getFilledElement(doc,"frequence", Integer.toString(utilisateur.getFrequence())));
