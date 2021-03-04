@@ -1,6 +1,7 @@
 package fr.leonie.jp.bot.xml;
 
 import fr.leonie.jp.bot.constant.Constant;
+import fr.leonie.jp.bot.loisirs.Jeu;
 import fr.leonie.jp.bot.loisirs.Loisir;
 import fr.leonie.jp.bot.loisirs.Sport;
 import fr.leonie.jp.bot.utilisateurs.Sportif;
@@ -18,6 +19,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class ExportXML {
 
@@ -46,7 +48,7 @@ public class ExportXML {
             DOMSource source = new DOMSource(doc);
 
             //write to file
-            StreamResult file = new StreamResult(new File(Constant.getXmlPath()));
+            StreamResult file = new StreamResult(new File(Constant.getXmlPath() + "utilisateurs.xml"));
             transformer.transform(source, file);
 
         } catch (Exception e) {
@@ -73,10 +75,12 @@ public class ExportXML {
         user.appendChild(getFilledElement(doc,"age", Integer.toString(utilisateur.getAge())));
 
         //create loisir elements
-        Element loisirs = doc.createElement(utilisateur.getLoisirCategory() + "s");
-        user.appendChild(loisirs);
-        for(Loisir loisir : utilisateur.getListeLoisirs()) {
-            loisirs.appendChild(getFilledElement(doc, loisir.getClass().getSimpleName(), loisir.getName()));
+        if(utilisateur.getListeLoisirs().size() > 0) {
+            Element loisirs = doc.createElement(utilisateur.getLoisirCategory() + "s");
+            user.appendChild(loisirs);
+            for(Loisir loisir : utilisateur.getListeLoisirs()) {
+                loisirs.appendChild(getFilledElement(doc, loisir.getClass().getSimpleName().toLowerCase(), loisir.getName()));
+            }
         }
 
         return user;
@@ -87,5 +91,103 @@ public class ExportXML {
         Element node = doc.createElement(name);
         node.appendChild(doc.createTextNode(value));
         return node;
+    }
+
+    public static void exportSports(ArrayList<Sport> listeSports) {
+        System.out.println(listeSports.size());
+
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder;
+
+        try {
+            dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.newDocument();
+            //add elements to Document
+            Element rootElement = doc.createElementNS(null,"sports");
+            //append root element to document
+            doc.appendChild(rootElement);
+
+            //append child element to root element from listeUtilisateurs
+            for(int i = 0; i < listeSports.size(); i++) {
+                rootElement.appendChild(getSport(doc, listeSports.get(i), i));
+            }
+
+            //for output to file, console
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            //for pretty print
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            DOMSource source = new DOMSource(doc);
+
+            //write to file
+            StreamResult file = new StreamResult(new File(Constant.getXmlPath() + "sports.xml"));
+            transformer.transform(source, file);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static Node getSport(Document doc, Sport sport, int id) {
+        Element sportNode = doc.createElement("sport");
+
+        //set id attribute
+        sportNode.setAttribute("id", Integer.toString(id));
+
+        //create nom element
+        sportNode.appendChild(getFilledElement(doc, "name", sport.getName()));
+
+        //create nbParticipants element
+        sportNode.appendChild(getFilledElement(doc,"nbParticipants", Integer.toString(sport.getNbParticipants())));
+
+        return sportNode;
+    }
+
+    public static void exportJeux(ArrayList<Jeu> listeJeux) {
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder;
+
+        try {
+            dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.newDocument();
+            //add elements to Document
+            Element rootElement = doc.createElementNS(null,"jeux");
+            //append root element to document
+            doc.appendChild(rootElement);
+
+            //append child element to root element from listeUtilisateurs
+            for(int i = 0; i < listeJeux.size(); i++) {
+                rootElement.appendChild(getJeu(doc, listeJeux.get(i), i));
+            }
+
+            //for output to file, console
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            //for pretty print
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            DOMSource source = new DOMSource(doc);
+
+            //write to file
+            StreamResult file = new StreamResult(new File(Constant.getXmlPath() + "jeux.xml"));
+            transformer.transform(source, file);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static Node getJeu(Document doc, Jeu jeu, int id) {
+        Element jeuNode = doc.createElement("jeu");
+
+        //set id attribute
+        jeuNode.setAttribute("id", Integer.toString(id));
+
+        //create nom element
+        jeuNode.appendChild(getFilledElement(doc, "name", jeu.getName()));
+
+        //create nbParticipants element
+        jeuNode.appendChild(getFilledElement(doc,"nbParticipants", Integer.toString(jeu.getNbParticipants())));
+
+        return jeuNode;
     }
 }

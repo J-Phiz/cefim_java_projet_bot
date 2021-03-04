@@ -6,15 +6,15 @@ import fr.leonie.jp.bot.loisirs.Sport;
 import java.util.ArrayList;
 
 public class Sportif extends Utilisateur {
-    private ArrayList<Sport> sports;
+    private ArrayList<Loisir> sports;
 
     public Sportif(String pNom, String pPrenom, int pAge, String pVille) {
         super(pNom, pPrenom, pAge, pVille);
-        sports = new ArrayList<Sport>();
+        sports = new ArrayList<Loisir>();
     }
 
     @Override
-    public ArrayList<Sport> getListeLoisirs() {
+    public ArrayList<Loisir> getListeLoisirs() {
         return sports;
     }
 

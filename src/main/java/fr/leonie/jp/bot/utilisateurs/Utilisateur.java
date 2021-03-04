@@ -36,7 +36,7 @@ public abstract class Utilisateur {
         return ville;
     }
 
-    public abstract ArrayList<? extends Loisir> getListeLoisirs();
+    public abstract ArrayList<Loisir> getListeLoisirs();
 
     public abstract String getLoisirCategory();
 

@@ -1,8 +1,10 @@
 package fr.leonie.jp.bot;
 
 import fr.leonie.jp.bot.communication.Communication;
+import fr.leonie.jp.bot.loisirs.Jeu;
 import fr.leonie.jp.bot.loisirs.Loisir;
 import fr.leonie.jp.bot.loisirs.LoisirFactory;
+import fr.leonie.jp.bot.loisirs.Sport;
 import fr.leonie.jp.bot.utilisateurs.*;
 import fr.leonie.jp.bot.constant.Constant;
 import fr.leonie.jp.bot.xml.ExportXML;
@@ -18,6 +20,8 @@ public class Bot {
     private static final Bot INSTANCE = new Bot();
     private final String nom;
     private final ArrayList<Utilisateur> listeUtilisateurs;
+    private final ArrayList<Sport> listeSports;
+    private final ArrayList<Jeu> listeJeux;
 
     private final List<String> yesAnswers = Arrays.asList(Constant.getYesAnswersArray());
     private final List<String> noAnswers = Arrays.asList(Constant.getNoAnswersArray());
@@ -27,8 +31,12 @@ public class Bot {
 
     private Bot() {
         nom = "MeetBot";
-        listeUtilisateurs = new ArrayList<Utilisateur>();
-        ImportXML.importUtilisateurs(listeUtilisateurs);
+        listeUtilisateurs = new ArrayList<>();
+        listeSports = new ArrayList<>();
+        listeJeux = new ArrayList<>();
+        ImportXML.importSports(listeSports);
+        ImportXML.importJeux(listeJeux);
+        ImportXML.importUtilisateurs(listeUtilisateurs, listeSports, listeJeux);
     }
 
     public static Bot getInstance() {
@@ -80,16 +88,24 @@ public class Bot {
             }
 
             // exportXML
-            ExportXML.exportUtilisateurs(listeUtilisateurs);
+            if(listeUtilisateurs.size() > 0) {
+                ExportXML.exportUtilisateurs(listeUtilisateurs);
+            }
+            if(listeSports.size() > 0) {
+                ExportXML.exportSports(listeSports);
+            }
+            if(listeJeux.size() > 0) {
+                ExportXML.exportJeux(listeJeux);
+            }
 
-                if(utilisateur.isPresent()) {
-                    com.send("A bientôt " + utilisateur.get().getPrenom() + " " + utilisateur.get().getNom());
-                } else {
-                    com.send("A bientôt");
-                }
-                com.send("bye");
+            if(utilisateur.isPresent()) {
+                com.send("A bientôt " + utilisateur.get().getPrenom() + " " + utilisateur.get().getNom());
+            } else {
+                com.send("A bientôt");
+            }
+            com.send("bye");
 
-                System.out.println("Fin de connexion avec l'utilisateur " + identite.get()[0] + " " + identite.get()[1]);
+            System.out.println("Fin de connexion avec l'utilisateur " + identite.get()[0] + " " + identite.get()[1]);
 
         } catch (IOException ex) {
             if (identite.isPresent()) {
@@ -213,7 +229,7 @@ public class Bot {
                 com.send("Etes-vous " + utilisateur.getPrenom() + " " + utilisateur.getNom() + ", " + utilisateur.getAge() + " ans, vivant à " + utilisateur.getVille() + " ?");
                 String response = com.receive();
                 if(yesAnswers.contains(response.toLowerCase())) {
-                    com.send("Ravi de te revoir !");
+                    com.send("Ravi de te retrouver !");
                     return Optional.of(utilisateur);
                 } else if(noAnswers.contains(response.toLowerCase())) {
                     com.send("Ah, j'ai dû confondre...");
@@ -240,22 +256,54 @@ public class Bot {
         for(int i = 0; i < nbLoisirs; i++) {
             com.send("Quel est le nom de ton " + categoryDeLoisir.toLowerCase() + " ?");
             String nom = com.receive();
-            int nbParticipants = 1;
 
             // chercher dans la liste des loisirs...
+            Optional<? extends Loisir> loisir = this.doIKnowThisHobby(categoryDeLoisir, nom);
 
-            com.send("Je ne connais pas, tu fais ça seul ?");
-            String solo = com.receive();
+            if(loisir.isEmpty()) {
+                do {
+                    com.send("Je ne connais pas, tu fais ça seul ?");
+                    String solo = com.receive();
+                    int nbParticipants = 1;
 
-            if(noAnswers.contains(solo.toLowerCase())) {
-                com.send("A combien alors ?");
-                nbParticipants = Integer.parseInt(com.receive());
-            } else if (!yesAnswers.contains(solo.toLowerCase())) {
-                com.send("C'est une question simple, peux-tu répondre par oui ou par non...");
-                // boucler...
+                    if(noAnswers.contains(solo.toLowerCase())) {
+                        com.send("A combien alors ?");
+                        nbParticipants = Integer.parseInt(com.receive());
+                        loisir = Optional.of(LoisirFactory.getLoisir(nom, nbParticipants, categoryDeLoisir));
+                    } else if (!yesAnswers.contains(solo.toLowerCase())) {
+                        com.send("C'est une question simple, peux-tu répondre par oui ou par non...");
+                    } else {
+                        loisir = Optional.of(LoisirFactory.getLoisir(nom, nbParticipants, categoryDeLoisir));
+                    }
+                } while(loisir.isEmpty());
             }
 
-            utilisateur.getListeLoisirs().add(LoisirFactory.getLoisir(nom, nbParticipants, categoryDeLoisir));
+
+            utilisateur.getListeLoisirs().add(loisir.get());
+            if(loisir.get().getClass().getSimpleName().equals("Sport")) {
+                listeSports.add((Sport) loisir.get());
+            } else if(loisir.get().getClass().getSimpleName().equals("Jeu")) {
+                listeJeux.add((Jeu) loisir.get());
+            }
         }
+    }
+
+    private <T extends Loisir> Optional<T> doIKnowThisHobby(String categoryDeLoisir, String nom) {
+        ArrayList<? extends Loisir> listeLoisirs = new ArrayList<>();
+        switch(categoryDeLoisir) {
+            case "Jeu":
+                listeLoisirs = listeJeux;
+                break;
+            case "Sport":
+                listeLoisirs = listeSports;
+                break;
+        }
+
+        for(int i = 0; i < listeLoisirs.size(); i++) {
+            if(listeLoisirs.get(i).getName().equalsIgnoreCase(nom)) {
+                return Optional.of((T) listeLoisirs.get(i));
+            }
+        }
+        return Optional.empty();
     }
 }

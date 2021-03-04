@@ -3,7 +3,7 @@ package fr.leonie.jp.bot.constant;
 public class Constant {
     private static final String HOSTNAME = "127.0.0.1";
     private static final int PORT = 1234;
-    private static final String XML_PATH = System.getProperty("user.dir") + "/src/main/java/fr/leonie/jp/bot/utilisateurs.xml";
+    private static final String XML_PATH = System.getProperty("user.dir") + "/src/main/java/fr/leonie/jp/bot/";
 
     private static final String[] YES_ANSWERS_ARRAY = {"oui", "yes", "yep", "ouai", "ouep"};
     private static final String[] NO_ANSWERS_ARRAY = {"non", "no", "nop", "nan"};
