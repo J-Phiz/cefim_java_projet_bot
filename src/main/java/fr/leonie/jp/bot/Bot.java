@@ -51,7 +51,7 @@ public class Bot {
     }
 
     public void discuss(Communication com) {
-        com.send("Bonjour, je suis MeetBot.");
+        com.send("Bonjour, je suis " + this.getNom());
 
         Optional<String[]> identite = Optional.empty();
 
@@ -86,17 +86,6 @@ public class Bot {
                 this.getToKnowBetter(com, utilisateur.get());
             }
 
-            // exportXML
-            if(listeUtilisateurs.size() > 0) {
-                ExportXML.exportUtilisateurs(listeUtilisateurs);
-            }
-            if(listeSports.size() > 0) {
-                ExportXML.exportSports(listeSports);
-            }
-            if(listeJeux.size() > 0) {
-                ExportXML.exportJeux(listeJeux);
-            }
-
             if(utilisateur.isPresent()) {
                 com.send("A bientôt " + utilisateur.get().getPrenom() + " " + utilisateur.get().getNom());
             } else {
@@ -110,6 +99,17 @@ public class Bot {
             if (identite.isPresent()) {
                 System.out.println("Connexion Fermée par l'utilisateur " + identite.get()[0] + " " + identite.get()[1]);
             }
+        }
+
+        // exportXML
+        if(listeUtilisateurs.size() > 0) {
+            ExportXML.exportUtilisateurs(listeUtilisateurs);
+        }
+        if(listeSports.size() > 0) {
+            ExportXML.exportSports(listeSports);
+        }
+        if(listeJeux.size() > 0) {
+            ExportXML.exportJeux(listeJeux);
         }
     }
 
@@ -229,6 +229,17 @@ public class Bot {
                 String response = com.receive();
                 if(yesAnswers.contains(response.toLowerCase())) {
                     com.send("Ravi de te retrouver !");
+                    if(utilisateur.getLoisirPrefere() != null) {
+                        com.send("Tu aimes toujours le/la " + utilisateur.getLoisirPrefere() + " ?");
+                        response = com.receive();
+                        if(yesAnswers.contains(response.toLowerCase())) {
+                            com.send("C'est une excellente nouvelle !");
+                        } else if(noAnswers.contains(response.toLowerCase())) {
+                            com.send("Dommage, on en reparle plus tard alors");
+                        } else {
+                            com.send("C'était pas trop dur comme question pourtant, ça commence bien ...");
+                        }
+                    }
                     return Optional.of(utilisateur);
                 } else if(noAnswers.contains(response.toLowerCase())) {
                     com.send("Ah, j'ai dû confondre...");
@@ -240,11 +251,18 @@ public class Bot {
     }
 
     private void getToKnowBetter(Communication com, Utilisateur utilisateur) throws IOException {
+        String response = "0";
+        while(!response.equals("bain") && !response.equals("douche")) {
+            com.send("Avant tout, je voudrais savoir : plutôt bain ou douche ?");
+            response = com.receive();
+        }
+        utilisateur.setSdb(response);
+
         String categoryDeLoisir = utilisateur.getLoisirCategory();
         Integer nbLoisirs = null;
         while(nbLoisirs == null) {
             com.send("De combien de " + categoryDeLoisir.toLowerCase() + "(s/x) veux-tu me parler ?");
-            String response = com.receive();
+            response = com.receive();
             try {
                nbLoisirs = new Integer(response);
             } catch(NumberFormatException e) {
@@ -309,8 +327,6 @@ public class Bot {
         }
 
         for(int i = 0; i < listeLoisirs.size(); i++) {
-            System.out.println("ici : " + listeLoisirs.get(i).getName());
-
             if(listeLoisirs.get(i).getName().equalsIgnoreCase(nom)) {
                 return Optional.of((T) listeLoisirs.get(i));
             }

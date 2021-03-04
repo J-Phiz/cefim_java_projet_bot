@@ -1,7 +1,5 @@
 package fr.leonie.jp.bot.loisirs;
 
-import java.util.Objects;
-
 public class Loisir {
     private final String name;
     private final int nbParticipants;

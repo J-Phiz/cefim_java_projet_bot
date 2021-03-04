@@ -4,6 +4,7 @@ import fr.leonie.jp.bot.constant.Constant;
 import fr.leonie.jp.bot.loisirs.Jeu;
 import fr.leonie.jp.bot.loisirs.Loisir;
 import fr.leonie.jp.bot.loisirs.Sport;
+import fr.leonie.jp.bot.utilisateurs.Joueur;
 import fr.leonie.jp.bot.utilisateurs.Sportif;
 import fr.leonie.jp.bot.utilisateurs.Utilisateur;
 import org.w3c.dom.Document;
@@ -74,6 +75,16 @@ public class ExportXML {
         //create age element
         user.appendChild(getFilledElement(doc,"age", Integer.toString(utilisateur.getAge())));
 
+        //create frequence element
+        if(utilisateur.getFrequence() > 0) {
+            user.appendChild(getFilledElement(doc,"frequence", Integer.toString(utilisateur.getFrequence())));
+        }
+
+        //create loisirPrefere element
+        if(utilisateur.getLoisirPrefere() != null && !utilisateur.getLoisirPrefere().trim().isEmpty()) {
+            user.appendChild(getFilledElement(doc,"loisirPrefere", utilisateur.getLoisirPrefere()));
+        }
+
         //create loisir elements
         if(utilisateur.getListeLoisirs().size() > 0) {
             Element loisirs = doc.createElement(utilisateur.getLoisirCategory() + "s");
@@ -81,6 +92,44 @@ public class ExportXML {
             for(Loisir loisir : utilisateur.getListeLoisirs()) {
                 loisirs.appendChild(getFilledElement(doc, loisir.getClass().getSimpleName().toLowerCase(), loisir.getName()));
             }
+        }
+
+        //create specific elements for Sportif & Joueur
+        switch(utilisateur.getClass().getSimpleName()) {
+            case "Joueur" :
+                Joueur joueur = (Joueur) utilisateur;
+                //create periodeJeu element
+                if(joueur.getPeriodeJeu() != null && !joueur.getPeriodeJeu().trim().isEmpty()) {
+                    user.appendChild(getFilledElement(doc, "periodeJeu", joueur.getPeriodeJeu()));
+                }
+                //create moyenneNbPers element
+                if(joueur.getMoyenneNbPers() > 0) {
+                    user.appendChild(getFilledElement(doc, "moyenneNbPers", Integer.toString(joueur.getMoyenneNbPers())));
+                }
+                //create mange element
+                if(joueur.getMange() != null && !joueur.getMange().trim().isEmpty()) {
+                    user.appendChild(getFilledElement(doc, "mange", joueur.getMange()));
+                }
+                //create bois element
+                if(joueur.getBois() != null && !joueur.getBois().trim().isEmpty()) {
+                    user.appendChild(getFilledElement(doc, "bois", joueur.getBois()));
+                }
+                break;
+            case "Sportif" :
+                Sportif sportif = (Sportif) utilisateur;
+                //create periodeSport element
+                if(sportif.getPeriodeSport() != null && !sportif.getPeriodeSport().trim().isEmpty()) {
+                    user.appendChild(getFilledElement(doc, "periodeSport", sportif.getPeriodeSport()));
+                }
+                //create cardioSport element
+                if(sportif.getCardioSport() > 0) {
+                    user.appendChild(getFilledElement(doc, "cardioSport", Integer.toString(sportif.getCardioSport())));
+                }
+                //create cardioRepos element
+                if(sportif.getCardioRepos() > 0) {
+                    user.appendChild(getFilledElement(doc, "cardioRepos", Integer.toString(sportif.getCardioRepos())));
+                }
+                break;
         }
 
         return user;
@@ -94,8 +143,6 @@ public class ExportXML {
     }
 
     public static void exportSports(ArrayList<Sport> listeSports) {
-        System.out.println(listeSports.size());
-
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder;
 

@@ -97,4 +97,20 @@ public class Joueur extends Utilisateur {
     public String getBois() {
         return bois;
     }
+
+    public void setPeriodeJeu(String periodeJeu) {
+        this.periodeJeu = periodeJeu;
+    }
+
+    public void setMoyenneNbPers(int moyenneNbPers) {
+        this.moyenneNbPers = moyenneNbPers;
+    }
+
+    public void setMange(String mange) {
+        this.mange = mange;
+    }
+
+    public void setBois(String bois) {
+        this.bois = bois;
+    }
 }

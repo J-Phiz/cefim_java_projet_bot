@@ -32,6 +32,25 @@ public class ImportXML {
                     Element eElement = (Element) nNode;
                     Sportif sportif = new Sportif(eElement.getElementsByTagName("name").item(0).getTextContent(), eElement.getElementsByTagName("firstname").item(0).getTextContent(), Integer.parseInt(eElement.getElementsByTagName("age").item(0).getTextContent()), eElement.getElementsByTagName("town").item(0).getTextContent());
 
+                    if(eElement.getElementsByTagName("loisirPrefere").getLength() > 0) {
+                        sportif.setLoisirPrefere(eElement.getElementsByTagName("loisirPrefere").item(0).getTextContent());
+                    }
+                    if(eElement.getElementsByTagName("sdb").getLength() > 0) {
+                        sportif.setSdb(eElement.getElementsByTagName("sdb").item(0).getTextContent());
+                    }
+                    if(eElement.getElementsByTagName("frequence").getLength() > 0) {
+                        sportif.setFrequence(Integer.parseInt(eElement.getElementsByTagName("frequence").item(0).getTextContent()));
+                    }
+                    if(eElement.getElementsByTagName("periodeSport").getLength() > 0) {
+                        sportif.setPeriodeSport(eElement.getElementsByTagName("periodeSport").item(0).getTextContent());
+                    }
+                    if(eElement.getElementsByTagName("cardioSport").getLength() > 0) {
+                        sportif.setCardioSport(Integer.parseInt(eElement.getElementsByTagName("cardioSport").item(0).getTextContent()));
+                    }
+                    if(eElement.getElementsByTagName("cardioRepos").getLength() > 0) {
+                        sportif.setCardioRepos(Integer.parseInt(eElement.getElementsByTagName("cardioRepos").item(0).getTextContent()));
+                    }
+
                     NodeList listeSportsUtilisateur = eElement.getElementsByTagName("sport");
 
                     for(int i = 0; i < listeSportsUtilisateur.getLength(); i++) {
@@ -61,6 +80,28 @@ public class ImportXML {
                 if (nNode.getNodeType() == Node.ELEMENT_NODE) {
                     Element eElement = (Element) nNode;
                     Joueur joueur = new Joueur(eElement.getElementsByTagName("name").item(0).getTextContent(), eElement.getElementsByTagName("firstname").item(0).getTextContent(), Integer.parseInt(eElement.getElementsByTagName("age").item(0).getTextContent()), eElement.getElementsByTagName("town").item(0).getTextContent());
+
+                    if(eElement.getElementsByTagName("loisirPrefere").getLength() > 0) {
+                        joueur.setLoisirPrefere(eElement.getElementsByTagName("loisirPrefere").item(0).getTextContent());
+                    }
+                    if(eElement.getElementsByTagName("sdb").getLength() > 0) {
+                        joueur.setSdb(eElement.getElementsByTagName("sdb").item(0).getTextContent());
+                    }
+                    if(eElement.getElementsByTagName("frequence").getLength() > 0) {
+                        joueur.setFrequence(Integer.parseInt(eElement.getElementsByTagName("frequence").item(0).getTextContent()));
+                    }
+                    if(eElement.getElementsByTagName("periodeJeu").getLength() > 0) {
+                        joueur.setPeriodeJeu(eElement.getElementsByTagName("periodeJeu").item(0).getTextContent());
+                    }
+                    if(eElement.getElementsByTagName("moyenneNbPers").getLength() > 0) {
+                        joueur.setMoyenneNbPers(Integer.parseInt(eElement.getElementsByTagName("moyenneNbPers").item(0).getTextContent()));
+                    }
+                    if(eElement.getElementsByTagName("mange").getLength() > 0) {
+                        joueur.setMange(eElement.getElementsByTagName("mange").item(0).getTextContent());
+                    }
+                    if(eElement.getElementsByTagName("bois").getLength() > 0) {
+                        joueur.setBois(eElement.getElementsByTagName("bois").item(0).getTextContent());
+                    }
 
                     NodeList listeJeuxUtilisateur = eElement.getElementsByTagName("jeu");
 

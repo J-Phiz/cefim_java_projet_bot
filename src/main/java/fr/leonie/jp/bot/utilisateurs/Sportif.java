@@ -73,4 +73,16 @@ public class Sportif extends Utilisateur {
     public int getCardioRepos() {
         return cardioRepos;
     }
+
+    public void setPeriodeSport(String periodeSport) {
+        this.periodeSport = periodeSport;
+    }
+
+    public void setCardioSport(int cardioSport) {
+        this.cardioSport = cardioSport;
+    }
+
+    public void setCardioRepos(int cardioRepos) {
+        this.cardioRepos = cardioRepos;
+    }
 }

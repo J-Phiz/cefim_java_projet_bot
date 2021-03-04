@@ -16,7 +16,8 @@ public abstract class Utilisateur {
 
     private final List<String> options = Arrays.asList(Constant.getOptionsArray());
     private int frequence;
-    private String jeuPrefere;
+    private String loisirPrefere;
+    private String sdb;
 
     protected Utilisateur(String pNom, String pPrenom, int pAge, String pVille) {
         nom = pNom;
@@ -45,8 +46,24 @@ public abstract class Utilisateur {
         return frequence;
     }
 
-    public String getJeuPrefere() {
-        return jeuPrefere;
+    public String getLoisirPrefere() {
+        return loisirPrefere;
+    }
+
+    public void setFrequence(int frequence) {
+        this.frequence = frequence;
+    }
+
+    public void setLoisirPrefere(String loisirPrefere) {
+        this.loisirPrefere = loisirPrefere;
+    }
+
+    public String getSdb() {
+        return sdb;
+    }
+
+    public void setSdb(String sdb) {
+        this.sdb = sdb;
     }
 
     public abstract ArrayList<Loisir> getListeLoisirs();
@@ -58,7 +75,7 @@ public abstract class Utilisateur {
         String response;
 
         com.send("Quel est ton " + type + " préféré ?");
-        jeuPrefere = com.receive();
+        loisirPrefere = com.receive();
         com.send("Moi aussi j'adore !");
 
         com.send("En moyenne, tu " + (type.compareTo(Jeu.getCategory()) == 0 ? "joues" : "en fais") + " combien d'heures par semaine ?");
