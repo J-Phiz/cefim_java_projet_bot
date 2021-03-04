@@ -12,14 +12,12 @@ public abstract class Utilisateur {
     private final String prenom;
     private final int age;
     private final String ville;
-    private final ArrayList<Loisir> listeLoisirs;
 
     protected Utilisateur(String pNom, String pPrenom, int pAge, String pVille) {
         nom = pNom;
         prenom = pPrenom;
         age = pAge;
         ville = pVille;
-        listeLoisirs = new ArrayList<>();
     }
 
     public String getNom() {
@@ -38,9 +36,7 @@ public abstract class Utilisateur {
         return ville;
     }
 
-    public ArrayList<Loisir> getListeLoisirs() {
-        return listeLoisirs;
-    }
+    public abstract ArrayList<? extends Loisir> getListeLoisirs();
 
     public abstract String getLoisirCategory();
 

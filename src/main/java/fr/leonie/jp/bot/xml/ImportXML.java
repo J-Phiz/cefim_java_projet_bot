@@ -40,14 +40,6 @@ public class ImportXML {
                         // sportif.addSport();
                     }
 
-                    if(eElement.getElementsByTagName("nbSeancesParSemaine").getLength() > 0) {
-                        sportif.setNbSeancesParSemaine(Integer.parseInt(eElement.getElementsByTagName("nbSeancesParSemaine").item(0).getTextContent()));
-                    }
-
-                    if(eElement.getElementsByTagName("niveau").getLength() > 0) {
-                        sportif.setNiveau(Integer.parseInt(eElement.getElementsByTagName("niveau").item(0).getTextContent()));
-                    }
-
                     listeUtilisateurs.add(sportif);
                 }
             }

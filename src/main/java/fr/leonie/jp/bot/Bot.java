@@ -228,7 +228,7 @@ public class Bot {
         String categoryDeLoisir = utilisateur.getLoisirCategory();
         Integer nbLoisirs = null;
         while(nbLoisirs == null) {
-            com.send("De combien de " + categoryDeLoisir.toLowerCase() + "s/x veux-tu me parler ?");
+            com.send("De combien de " + categoryDeLoisir.toLowerCase() + "(s/x) veux-tu me parler ?");
             String response = com.receive();
             try {
                nbLoisirs = new Integer(response);
@@ -255,8 +255,7 @@ public class Bot {
                 // boucler...
             }
 
-            Loisir loisir = LoisirFactory.getLoisir(nom, nbParticipants, categoryDeLoisir);
-            utilisateur.getListeLoisirs().add(loisir);
+            utilisateur.getListeLoisirs().add(LoisirFactory.getLoisir(nom, nbParticipants, categoryDeLoisir));
         }
     }
 }
