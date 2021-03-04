@@ -1,5 +1,6 @@
 package fr.leonie.jp.bot.utilisateurs;
 
+import fr.leonie.jp.bot.bot.BotTools;
 import fr.leonie.jp.bot.communication.Communication;
 import fr.leonie.jp.bot.constant.Constant;
 import fr.leonie.jp.bot.loisirs.Jeu;
@@ -72,19 +73,11 @@ public abstract class Utilisateur {
 
     public void talkAbout(Communication com) throws IOException {
         String type = getLoisirCategory();
-        String response;
 
-        com.send("Quel est ton " + type + " préféré ?");
-        loisirPrefere = com.receive();
+        loisirPrefere = BotTools.responseInList(com, this.getListeLoisirs(), "Quel est ton " + type + " préféré ?");
         com.send("Moi aussi j'adore !");
 
-        com.send("En moyenne, tu " + (type.compareTo(Jeu.getCategory()) == 0 ? "joues" : "en fais") + " combien d'heures par semaine ?");
-        response = com.receive();
-        try {
-            frequence = new Integer(response);
-        } catch(NumberFormatException e) {
-            com.send("Une réponse avec des chiffres stp...");
-        }
+        frequence = BotTools.responseInt(com, "En moyenne, tu " + (type.compareTo(Jeu.getCategory()) == 0 ? "joues" : "en fais") + " combien d'heures par semaine ?");
         com.send("Ah c'est pas mal");
     }
 
