@@ -1,6 +1,7 @@
 package fr.leonie.jp.bot.utilisateurs;
 
 import fr.leonie.jp.bot.loisirs.Jeu;
+import fr.leonie.jp.bot.loisirs.Sport;
 
 import java.util.ArrayList;
 
@@ -17,5 +18,9 @@ public class Joueur extends Utilisateur {
 
     public ArrayList<Jeu> getJeux() {
         return jeux;
+    }
+
+    public String getLoisirCategory() {
+        return Jeu.getCategory();
     }
 }

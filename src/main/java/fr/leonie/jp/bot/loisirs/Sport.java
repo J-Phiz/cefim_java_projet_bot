@@ -1,19 +1,13 @@
 package fr.leonie.jp.bot.loisirs;
 
-public class Sport {
-    private final String nom;
-    private final String type;
+public class Sport extends Loisir {
+    private static final String CATEGORY = "Sport";
 
-    public Sport(String nom, String type) {
-        this.nom = nom;
-        this.type = type;
+    public Sport(String pName, int pNbJoueurs) {
+        super(pName, pNbJoueurs);
     }
 
-    public String getNom() {
-        return nom;
-    }
-
-    public String getType() {
-        return type;
+    public static String getCategory() {
+        return CATEGORY;
     }
 }

@@ -1,11 +1,12 @@
 package fr.leonie.jp.bot.utilisateurs;
 
+import fr.leonie.jp.bot.loisirs.Sport;
+
 import java.util.ArrayList;
 
 public class GrosseTete extends Utilisateur {
     private ArrayList<String> Livres;
     private ArrayList<String> Films;
-    private ArrayList<String> Musees;
 
     public GrosseTete(String pNom, String pPrenom, int pAge, String pVille) {
         super(pNom, pPrenom, pAge, pVille);
@@ -27,11 +28,7 @@ public class GrosseTete extends Utilisateur {
         Films = films;
     }
 
-    public ArrayList<String> getMusees() {
-        return Musees;
-    }
-
-    public void setMusees(ArrayList<String> musees) {
-        Musees = musees;
+    public String getLoisirCategory() {
+        return "";
     }
 }

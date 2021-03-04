@@ -1,6 +1,7 @@
 package fr.leonie.jp.bot.xml;
 
 import fr.leonie.jp.bot.constant.Constant;
+import fr.leonie.jp.bot.loisirs.Loisir;
 import fr.leonie.jp.bot.loisirs.Sport;
 import fr.leonie.jp.bot.utilisateurs.Sportif;
 import fr.leonie.jp.bot.utilisateurs.Utilisateur;
@@ -60,36 +61,29 @@ public class ExportXML {
         user.setAttribute("id", Integer.toString(id));
 
         //create nom element
-        user.appendChild(getUserElements(doc, "name", utilisateur.getNom()));
+        user.appendChild(getFilledElement(doc, "name", utilisateur.getNom()));
 
         //create firstname element
-        user.appendChild(getUserElements(doc,"firstname", utilisateur.getPrenom()));
+        user.appendChild(getFilledElement(doc,"firstname", utilisateur.getPrenom()));
 
         //create town element
-        user.appendChild(getUserElements(doc,"town", utilisateur.getVille()));
+        user.appendChild(getFilledElement(doc,"town", utilisateur.getVille()));
 
         //create age element
-        user.appendChild(getUserElements(doc,"age", Integer.toString(utilisateur.getAge())));
+        user.appendChild(getFilledElement(doc,"age", Integer.toString(utilisateur.getAge())));
 
-        switch(utilisateur.getClass().getSimpleName()) {
-            case "Sportif":
-                //create sport elements
-                for(Sport sport : ((Sportif)utilisateur).getSports()) {
-                    user.appendChild(getUserElements(doc,"sport", sport.getNom()));
-                }
-                break;
-            case "GrosseTete":
-
-                break;
-            case "Joueur":
-                break;
+        //create loisir elements
+        Element loisirs = doc.createElement(utilisateur.getLoisirCategory() + "s");
+        user.appendChild(loisirs);
+        for(Loisir loisir : utilisateur.getListeLoisirs()) {
+            loisirs.appendChild(getFilledElement(doc, loisir.getClass().getSimpleName(), loisir.getName()));
         }
 
         return user;
     }
 
     //utility method to create text node
-    private static Node getUserElements(Document doc, String name, String value) {
+    private static Node getFilledElement(Document doc, String name, String value) {
         Element node = doc.createElement(name);
         node.appendChild(doc.createTextNode(value));
         return node;

@@ -1,19 +1,13 @@
 package fr.leonie.jp.bot.loisirs;
 
-public class Jeu {
-    private final String name;
-    private final int nbJoueurs;
+public class Jeu extends Loisir {
+    private static final String CATEGORY = "Jeu";
 
-    public Jeu(String name, int nbJoueurs) {
-        this.name = name;
-        this.nbJoueurs = nbJoueurs;
+    public Jeu(String pName, int pNbJoueurs) {
+        super(pName, pNbJoueurs);
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public int getNbJoueurs() {
-        return nbJoueurs;
+    public static String getCategory() {
+        return CATEGORY;
     }
 }

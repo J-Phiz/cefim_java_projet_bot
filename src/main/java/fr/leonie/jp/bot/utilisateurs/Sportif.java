@@ -5,7 +5,7 @@ import fr.leonie.jp.bot.loisirs.Sport;
 import java.util.ArrayList;
 
 public class Sportif extends Utilisateur {
-    private ArrayList<Sport> sports = new ArrayList<Sport>();
+    private ArrayList<Sport> sports = new ArrayList<>();
     private int nbSeancesParSemaine;
     private int niveau;
 
@@ -54,5 +54,9 @@ public class Sportif extends Utilisateur {
 
     public int getNiveau() {
         return niveau;
+    }
+
+    public String getLoisirCategory() {
+        return Sport.getCategory();
     }
 }

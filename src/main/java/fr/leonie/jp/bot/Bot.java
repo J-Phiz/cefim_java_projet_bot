@@ -1,6 +1,8 @@
 package fr.leonie.jp.bot;
 
 import fr.leonie.jp.bot.communication.Communication;
+import fr.leonie.jp.bot.loisirs.Loisir;
+import fr.leonie.jp.bot.loisirs.LoisirFactory;
 import fr.leonie.jp.bot.utilisateurs.*;
 import fr.leonie.jp.bot.constant.Constant;
 import fr.leonie.jp.bot.xml.ExportXML;
@@ -8,6 +10,7 @@ import fr.leonie.jp.bot.xml.ImportXML;
 import jdk.jshell.execution.Util;
 
 import javax.swing.text.html.Option;
+import java.lang.reflect.Constructor;
 import java.util.*;
 
 public class Bot {
@@ -45,29 +48,31 @@ public class Bot {
         Optional<String[]> identite;
         do {
             identite = this.validatedName(com);
-        } while(identite.isEmpty());
+        } while (identite.isEmpty());
 
         // retrouver l'utilisateur si déjà connu
         Optional<Utilisateur> utilisateur = this.doWeKnow(com, identite);
 
         // sinon, on le crée
-        if(utilisateur.isEmpty()){
+        if (utilisateur.isEmpty()) {
             Optional<Integer> age;
             do {
                 age = this.validatedAge(com);
-            } while(age.isEmpty());
+            } while (age.isEmpty());
 
             Optional<String> ville;
             do {
                 ville = this.validatedVille(com);
-            } while(ville.isEmpty());
+            } while (ville.isEmpty());
 
             utilisateur = this.validatedUtilisateur(com, identite, age, ville);
         }
 
         // et on fait plus ample connaissance
         // attention : si utilisateur deja connu, ne pas redemander ce qu'on sait déjà
-
+        if (utilisateur.isPresent()) {
+            this.getToKnowBetter(com, utilisateur.get());
+        }
 
         // exportXML
         ExportXML.exportUtilisateurs(listeUtilisateurs);
@@ -182,13 +187,16 @@ public class Bot {
             }
         }
 
-        listeUtilisateurs.add(utilisateur);
+        Utilisateur finalUtilisateur = utilisateur;
+        if(listeUtilisateurs.stream().noneMatch(u -> u.equals(finalUtilisateur))) {
+            listeUtilisateurs.add(utilisateur);
+        }
         return Optional.ofNullable(utilisateur);
     }
 
     private Optional<Utilisateur> doWeKnow(Communication com, Optional<String[]> identite) {
         for(Utilisateur utilisateur : listeUtilisateurs) {
-            if(utilisateur.getPrenom().equals(identite.get()[0]) && utilisateur.getNom().equals(identite.get()[1])) {
+            if(utilisateur.getPrenom().equalsIgnoreCase(identite.get()[0]) && utilisateur.getNom().equalsIgnoreCase(identite.get()[1])) {
                 com.send("Etes-vous " + utilisateur.getPrenom() + " " + utilisateur.getNom() + ", " + utilisateur.getAge() + " ans, vivant à " + utilisateur.getVille() + " ?");
                 String response = com.receive();
                 if(yesAnswers.contains(response.toLowerCase())) {
@@ -201,5 +209,41 @@ public class Bot {
         }
         com.send("Enchanté de faire ta connaissance");
         return Optional.empty();
+    }
+
+    private void getToKnowBetter(Communication com, Utilisateur utilisateur) {
+        String categoryDeLoisir = utilisateur.getLoisirCategory();
+        Integer nbLoisirs = null;
+        while(nbLoisirs == null) {
+            com.send("De combien de " + categoryDeLoisir.toLowerCase() + "s/x veux-tu me parler ?");
+            String response = com.receive();
+            try {
+               nbLoisirs = new Integer(response);
+            } catch(NumberFormatException e) {
+                com.send("Une réponse avec des chiffres stp...");
+            }
+        };
+
+        for(int i = 0; i < nbLoisirs; i++) {
+            com.send("Quel est le nom de ton " + categoryDeLoisir.toLowerCase() + " ?");
+            String nom = com.receive();
+            int nbParticipants = 1;
+
+            // chercher dans la liste des loisirs...
+
+            com.send("Je ne connais pas, tu fais ça seul ?");
+            String solo = com.receive();
+
+            if(noAnswers.contains(solo.toLowerCase())) {
+                com.send("A combien alors ?");
+                nbParticipants = Integer.parseInt(com.receive());
+            } else if (!yesAnswers.contains(solo.toLowerCase())) {
+                com.send("C'est une question simple, peux-tu répondre par oui ou par non...");
+                // boucler...
+            }
+
+            Loisir loisir = LoisirFactory.getLoisir(nom, nbParticipants, categoryDeLoisir);
+            utilisateur.getListeLoisirs().add(loisir);
+        }
     }
 }
