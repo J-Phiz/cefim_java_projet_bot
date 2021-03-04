@@ -22,8 +22,7 @@ public class Bot {
     private final List<String> yesAnswers = Arrays.asList(Constant.getYesAnswersArray());
     private final List<String> noAnswers = Arrays.asList(Constant.getNoAnswersArray());
 
-    private final String[] optionsArray = {"1", "2", "3"};
-    private final List<String> options = Arrays.asList(optionsArray);
+    private final List<String> options = Arrays.asList(Constant.getOptionsArray());
 
     private Bot() {
         nom = "MeetBot";
@@ -257,5 +256,7 @@ public class Bot {
 
             utilisateur.getListeLoisirs().add(LoisirFactory.getLoisir(nom, nbParticipants, categoryDeLoisir));
         }
+        utilisateur.talkAbout(com);
+
     }
 }

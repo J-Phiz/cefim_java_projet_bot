@@ -1,8 +1,10 @@
 package fr.leonie.jp.bot.utilisateurs;
 
+import fr.leonie.jp.bot.communication.Communication;
 import fr.leonie.jp.bot.loisirs.Loisir;
 import fr.leonie.jp.bot.loisirs.Sport;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Sportif extends Utilisateur {
@@ -21,5 +23,10 @@ public class Sportif extends Utilisateur {
     @Override
     public String getLoisirCategory() {
         return Sport.getCategory();
+    }
+
+    @Override
+    public void talkAbout(Communication com) throws IOException {
+
     }
 }

@@ -1,17 +1,24 @@
 package fr.leonie.jp.bot.utilisateurs;
 
+import fr.leonie.jp.bot.communication.Communication;
+import fr.leonie.jp.bot.constant.Constant;
+import fr.leonie.jp.bot.loisirs.Jeu;
 import fr.leonie.jp.bot.loisirs.Loisir;
 import fr.leonie.jp.bot.loisirs.Sport;
 
-import java.util.ArrayList;
-import java.util.Locale;
-import java.util.Objects;
+import java.io.IOException;
+import java.util.*;
 
 public abstract class Utilisateur {
     private final String nom;
     private final String prenom;
     private final int age;
     private final String ville;
+
+    private final List<String> options = Arrays.asList(Constant.getOptionsArray());
+    private int frequence;
+    private String jeuPrefere;
+    private int moyenneNbPers;
 
     protected Utilisateur(String pNom, String pPrenom, int pAge, String pVille) {
         nom = pNom;
@@ -36,9 +43,45 @@ public abstract class Utilisateur {
         return ville;
     }
 
+    public int getFrequence() {
+        return frequence;
+    }
+
+    public String getJeuPrefere() {
+        return jeuPrefere;
+    }
+
+    public int getMoyenneNbPers() {
+        return moyenneNbPers;
+    }
+
     public abstract ArrayList<? extends Loisir> getListeLoisirs();
 
     public abstract String getLoisirCategory();
+
+    public void talkAbout(Communication com) throws IOException {
+        String type = getLoisirCategory();
+        String response;
+
+        com.send("Quel est ton " + type + " préféré ?");
+        jeuPrefere = com.receive();
+        com.send("Moi aussi j'adore !");
+        com.send("En moyenne, tu " + (type.compareTo(Jeu.getCategory()) == 0 ? "joues" : "en fais") + " combien d'heures par semaine ?");
+        response = com.receive();
+        try {
+            frequence = new Integer(response);
+        } catch(NumberFormatException e) {
+            com.send("Une réponse avec des chiffres stp...");
+        }
+        com.send("Ah c'est pas mal");
+        com.send("En moyenne, tu " + (type.compareTo(Jeu.getCategory()) == 0 ? "joues" : "en fais") + " avec combien de personnes ?");
+        response = com.receive();
+        try {
+            moyenneNbPers = new Integer(response);
+        } catch(NumberFormatException e) {
+            com.send("Une réponse avec des chiffres stp...");
+        }
+    }
 
     @Override
     public boolean equals(Object o) {
