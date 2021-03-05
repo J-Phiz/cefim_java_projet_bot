@@ -3,9 +3,13 @@ package fr.leonie.jp.bot.serveur;
 import fr.leonie.jp.bot.communication.Communication;
 import fr.leonie.jp.bot.communication.ServeurCommunication;
 import fr.leonie.jp.bot.constant.Constant;
+import fr.leonie.jp.bot.loisirs.Loisir;
+import fr.leonie.jp.bot.utilisateurs.Sportif;
+import fr.leonie.jp.bot.utilisateurs.Utilisateur;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.ArrayList;
 
 public class ServeurMain {
 
@@ -28,8 +32,20 @@ public class ServeurMain {
             Communication communication = new ServeurCommunication(serverSocket);
             communication.open();
 
-            new ServeurThread(communication).start();
-            new SearchThread(communication).start();
+            Utilisateur currentUtilisateur = new Utilisateur("TOTO", "Machin", 3, "SaisPas") {
+                @Override
+                public ArrayList<Loisir> getListeLoisirs() {
+                    return null;
+                }
+
+                @Override
+                public String getLoisirCategory() {
+                    return null;
+                }
+            };
+            System.out.println("Main: " + currentUtilisateur);
+            new ServeurThread(communication, currentUtilisateur).start();
+            new SearchThread(communication, currentUtilisateur).start();
         }
 
     }
