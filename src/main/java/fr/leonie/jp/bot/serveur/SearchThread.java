@@ -1,13 +1,10 @@
 package fr.leonie.jp.bot.serveur;
 
 import fr.leonie.jp.bot.bot.Bot;
-import fr.leonie.jp.bot.communication.Communication;
 import fr.leonie.jp.bot.communication.ServeurCommunication;
 import fr.leonie.jp.bot.constant.Constant;
 import fr.leonie.jp.bot.search.Search;
 import fr.leonie.jp.bot.utilisateurs.Utilisateur;
-
-import java.util.Optional;
 
 public class SearchThread extends Thread {
     private final ServeurCommunication communication;
@@ -29,7 +26,13 @@ public class SearchThread extends Thread {
 
                     Utilisateur currentUtilisateur = communication.getCurrentUtilisateur();
                     if (currentUtilisateur != null) {
-                        Search.SearchBuilder recherche = new Search.SearchBuilder(currentUtilisateur, true, 10).sdb(true).nbCommonLoisirs(1);
+                        Search.SearchBuilder recherche = new Search.SearchBuilder(currentUtilisateur, true, 10);
+                        if(!Constant.isNullOrEmpty(currentUtilisateur.getSdb())) {
+                            recherche.sdb(true);
+                        }
+                        if(currentUtilisateur.getListeLoisirs().size() > 0) {
+                            recherche.nbCommonLoisirs(1);
+                        }
                         communication.send(Constant.textInRed("Pour info, " + currentUtilisateur.getPrenom() + ", je t'ai trouvé " + recherche.build().result().size() + " ami(s) dans ta ville"));
                     } else {
                         communication.send(Constant.textInRed("Utilisateur inconnu"));
