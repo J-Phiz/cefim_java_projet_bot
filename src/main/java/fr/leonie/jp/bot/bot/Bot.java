@@ -70,15 +70,23 @@ public class Bot {
             }
 
             // et on fait plus ample connaissance
-            if (utilisateur.isPresent()) {
+            if(utilisateur.isPresent()) {
                 synchronized (com) {
                     com.setCurrentUtilisateur(utilisateur.get());
                     com.notify();
                 }
-                this.getToKnowBetter(com, utilisateur.get());
-            }
 
-            if(utilisateur.isPresent()) {
+                String[] msg = {
+                        "Tu préfères rechercher des amis ? Tape 1",
+                        "ou continuer à compléter ton profil ? Tape 2"
+                };
+                int choice = BotTools.responseOption(com, 2,msg);
+
+                switch(choice) {
+                    case 1 -> this.paramSearch(com, utilisateur.get());
+                    case 2 -> this.getToKnowBetter(com, utilisateur.get());
+                }
+
                 com.send("A bientôt " + utilisateur.get().getPrenom() + " " + utilisateur.get().getNom());
             } else {
                 com.send("A bientôt");
@@ -254,7 +262,7 @@ public class Bot {
         if(BotTools.responseYesNo(com,"Tu veux ajouter des " + categoryDeLoisir.toLowerCase() + "(s/x) à ton profil ?")) {
             int nbLoisirs = BotTools.responseInt(com, "De combien de " + categoryDeLoisir.toLowerCase() + "(s/x) veux-tu me parler ?");
             for(int i = 0; i < nbLoisirs; i++) {
-                com.send("Quel est le nom de ton " + categoryDeLoisir.toLowerCase() + " ?");
+                com.send("Quel est le nom de ton " + categoryDeLoisir.toLowerCase() + " n°" + i +" ?");
                 String nom = com.receive();
 
                 // chercher dans la liste des loisirs...
@@ -298,6 +306,10 @@ public class Bot {
         }
 
         utilisateur.talkAbout(com);
+
+        if(BotTools.responseYesNo(com, "Maintenant que je te connais mieux, je te présente des amis ?")) {
+            this.paramSearch(com, utilisateur);
+        }
     }
 
     private <T extends Loisir> Optional<T> doIKnowThisHobby(String categoryDeLoisir, String nom) {
@@ -319,11 +331,29 @@ public class Bot {
         return Optional.empty();
     }
 
-    private ArrayList<Utilisateur> findMatches(Utilisateur utilisateur) {
-        Search.SearchBuilder recherche = new Search.SearchBuilder(utilisateur, false, 5)
-                .nbCommonLoisirs(1)
-                .sdb(false);
+    private void paramSearch(Communication com, Utilisateur utilisateur) throws IOException {
+        boolean ville = BotTools.responseYesNo(com, "Uniquement des amis qui vivent dans ta ville ?");
+        int age = BotTools.responseInt(com, "Quelle différence d'age maximum ?");
+        Search.SearchBuilder recherche = new Search.SearchBuilder(utilisateur, ville, age);
+        if(utilisateur.getListeLoisirs().size() > 0) {
+            int nbCommonLoisirs = BotTools.responseInt(com, "Combien de loisirs en commun ?");
+            recherche.nbCommonLoisirs(nbCommonLoisirs);
+        }
+        if(!Constant.isNullOrEmpty(utilisateur.getSdb())) {
+            boolean sdb = BotTools.responseYesNo(com, "Est-ce que tu ne sympathises qu'avec des personnes qui prennent des " + utilisateur.getSdb() + "s comme toi ?");
+            recherche.sdb(sdb);
+        }
+
         ArrayList<Utilisateur> resultat = recherche.build().result();
-        return resultat;
+        if(resultat.size() > 0) {
+            com.send(Constant.textInRed("Voici les personnes que j'ai sélectionnées pour toi :"));
+            for(Utilisateur u : resultat) {
+                com.send(Constant.textInRed(u.getPrenom() + " " + u.getNom() + " qui adore le/la " + u.getLoisirPrefere()));
+            }
+        } else {
+            com.send(Constant.textInRed("J'ai une bonne et une mauvaise nouvelle"));
+            com.send(Constant.textInRed("La mauvaise : je n'ai aucun résultat"));
+            com.send(Constant.textInRed("La bonne : moi, je veux bien être ton ami <3"));
+        }
     }
 }

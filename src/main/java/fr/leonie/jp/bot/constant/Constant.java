@@ -49,7 +49,5 @@ public class Constant {
         return string == null || string.trim().isEmpty();
     }
 
-    public static String textInRed(String string) {
-        return ANSI_RED + string + ANSI_RESET;
-    }
+    public static String textInRed(String string) { return ANSI_RED + string + ANSI_RESET; }
 }
