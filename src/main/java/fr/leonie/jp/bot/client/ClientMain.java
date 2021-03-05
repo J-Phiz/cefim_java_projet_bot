@@ -20,6 +20,9 @@ public class ClientMain {
         Thread txCommunication = new Thread(new ClientTxThread(communication));
         Thread rxCommunication = new Thread(new ClientRxThread(communication));
 
+        System.out.println();
+        System.out.println();
+
         communication.open();
 
         txCommunication.start();

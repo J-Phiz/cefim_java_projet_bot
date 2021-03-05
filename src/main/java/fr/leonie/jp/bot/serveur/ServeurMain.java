@@ -22,6 +22,8 @@ public class ServeurMain {
     }
 
     public void run() {
+        System.out.println();
+        System.out.println();
         System.out.println("Bot démarré et en attente de connexions.");
 
         while (true) {
