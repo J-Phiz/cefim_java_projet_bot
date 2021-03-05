@@ -253,7 +253,7 @@ public class Bot {
         if(BotTools.responseYesNo(com,"Tu veux ajouter des " + categoryDeLoisir.toLowerCase() + "(s/x) à ton profil ?")) {
             int nbLoisirs = BotTools.responseInt(com, "De combien de " + categoryDeLoisir.toLowerCase() + "(s/x) veux-tu me parler ?");
             for(int i = 0; i < nbLoisirs; i++) {
-                com.send("Quel est le nom de ton " + categoryDeLoisir.toLowerCase() + " n°" + i +" ?");
+                com.send("Quel est le nom de ton " + categoryDeLoisir.toLowerCase() + " n°" + (i+1) +" ?");
                 String nom = com.receive();
 
                 // chercher dans la liste des loisirs...
