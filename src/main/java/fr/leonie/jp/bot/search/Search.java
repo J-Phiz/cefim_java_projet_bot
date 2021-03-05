@@ -2,6 +2,7 @@ package fr.leonie.jp.bot.search;
 
 import fr.leonie.jp.bot.bot.Bot;
 import fr.leonie.jp.bot.constant.Constant;
+import fr.leonie.jp.bot.utilisateurs.Joueur;
 import fr.leonie.jp.bot.utilisateurs.Utilisateur;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ public class Search {
     // optional
     private final boolean sdb;
     private final int nbCommonLoisirs;
+    private final boolean mange;
 
     private Search(SearchBuilder builder) {
         utilisateur = builder.utilisateur;
@@ -24,6 +26,7 @@ public class Search {
         diffAge = builder.diffAge;
         sdb = builder.sdb;
         nbCommonLoisirs = builder.nbCommonLoisirs;
+        mange = builder.mange;
     }
 
     public ArrayList<Utilisateur> result() {
@@ -33,6 +36,7 @@ public class Search {
                         .and(predicateAge())
                         .and(predicateSdb())
                         .and(predicateLoisirs())
+                        .and(predicateMange())
                         .and(u -> !u.equals(utilisateur))
                 )
                 .collect(Collectors.toList());
@@ -62,6 +66,14 @@ public class Search {
         return u -> u.getListeLoisirs().stream().filter(l -> utilisateur.getListeLoisirs().contains(l)).count() >= nbCommonLoisirs;
     }
 
+    private Predicate<Utilisateur> predicateMange() {
+        if(mange && utilisateur instanceof Joueur) {
+            return u -> !Constant.isNullOrEmpty(((Joueur)u).getMange()) && ((Joueur)u).getMange().compareTo("rien") == 0;
+        } else {
+            return u -> true;
+        }
+    }
+
     // Builder Class
     public static class SearchBuilder {
         // required
@@ -72,6 +84,7 @@ public class Search {
         // optional
         private boolean sdb;
         private int nbCommonLoisirs;
+        private boolean mange;
 
         public SearchBuilder(Utilisateur pUtilisateur, boolean pVille, int pDiffAge) {
             utilisateur = pUtilisateur;
@@ -79,6 +92,7 @@ public class Search {
             diffAge = pDiffAge;
             sdb = false;
             nbCommonLoisirs = 0;
+            mange = false;
         }
 
         public SearchBuilder sdb(boolean pSdb) {
@@ -88,6 +102,13 @@ public class Search {
 
         public SearchBuilder nbCommonLoisirs(int pNbCommonLoisirs) {
             nbCommonLoisirs = pNbCommonLoisirs;
+            return this;
+        }
+
+        public SearchBuilder mange(boolean pMange) {
+            if(utilisateur instanceof Joueur) {
+                mange = pMange;
+            }
             return this;
         }
 

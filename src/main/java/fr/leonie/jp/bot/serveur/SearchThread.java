@@ -17,8 +17,6 @@ public class SearchThread extends Thread {
 
     @Override
     public void run() {
-        communication.send(Constant.textInRed("test"));
-
         try {
             synchronized (communication) {
                 while(!communication.isCloseRequested()) {

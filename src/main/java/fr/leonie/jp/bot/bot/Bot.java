@@ -284,9 +284,9 @@ public class Bot {
                 }
 
                 if(newHobby) {
-                    if(loisir.get().getClass().getSimpleName().equals("Sport")) {
+                    if(loisir.get() instanceof Sport) {
                         listeSports.add((Sport) loisir.get());
-                    } else if(loisir.get().getClass().getSimpleName().equals("Jeu")) {
+                    } else if(loisir.get() instanceof Jeu) {
                         listeJeux.add((Jeu) loisir.get());
                     }
                 }
@@ -346,6 +346,11 @@ public class Bot {
         if(!Constant.isNullOrEmpty(utilisateur.getSdb())) {
             boolean sdb = BotTools.responseYesNo(com, "Est-ce que tu ne sympathises qu'avec des personnes qui prennent des " + utilisateur.getSdb() + "s comme toi ?");
             recherche.sdb(sdb);
+        }
+        if(utilisateur instanceof Joueur && !Constant.isNullOrEmpty(((Joueur) utilisateur).getMange())) {
+            String grignotte = ((Joueur) utilisateur).getMange().equals("rien") ? "ne mangent rien" : "mangent";
+            boolean mange = BotTools.responseYesNo(com, "Est-ce que tu ne sympathises qu'avec des personnes qui, comme toi, " + grignotte + " pendant qu'elles jouent ?");
+            recherche.mange(mange);
         }
 
         ArrayList<Utilisateur> resultat = recherche.build().result();
