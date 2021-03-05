@@ -305,6 +305,10 @@ public class Bot {
             com.send("Peut-être la prochaine fois :)");
         }
 
+        synchronized (com) {
+            com.notify();
+        }
+
         utilisateur.talkAbout(com);
 
         if(BotTools.responseYesNo(com, "Maintenant que je te connais mieux, je te présente des amis ?")) {
