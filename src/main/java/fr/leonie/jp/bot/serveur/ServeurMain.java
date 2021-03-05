@@ -29,6 +29,7 @@ public class ServeurMain {
             communication.open();
 
             new ServeurThread(communication).start();
+            new SearchThread(communication).start();
         }
 
     }
