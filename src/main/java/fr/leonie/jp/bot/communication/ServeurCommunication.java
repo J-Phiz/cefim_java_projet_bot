@@ -1,6 +1,8 @@
 package fr.leonie.jp.bot.communication;
 
 
+import fr.leonie.jp.bot.utilisateurs.Utilisateur;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,14 +13,24 @@ import java.net.Socket;
 public class ServeurCommunication implements Communication {
 
     private final ServerSocket serverSocket;
+    private Utilisateur currentUtilisateur;
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
     private boolean wantToClose;
 
 
-    public ServeurCommunication(ServerSocket serverSocket) {
+    public ServeurCommunication(ServerSocket serverSocket, Utilisateur currentUtilisateur) {
         this.serverSocket = serverSocket;
+        this.currentUtilisateur = currentUtilisateur;
+    }
+
+    public void setCurrentUtilisateur(Utilisateur currentUtilisateur) {
+        this.currentUtilisateur = currentUtilisateur;
+    }
+
+    public Utilisateur getCurrentUtilisateur() {
+        return currentUtilisateur;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package fr.leonie.jp.bot.bot;
 
 import fr.leonie.jp.bot.communication.Communication;
+import fr.leonie.jp.bot.communication.ServeurCommunication;
 import fr.leonie.jp.bot.loisirs.Jeu;
 import fr.leonie.jp.bot.loisirs.Loisir;
 import fr.leonie.jp.bot.loisirs.LoisirFactory;
@@ -41,7 +42,7 @@ public class Bot {
 
     public ArrayList<Utilisateur> getListeUtilisateurs() { return listeUtilisateurs; }
 
-    public void discuss(Communication com, Utilisateur currentUtilisateur) {
+    public void discuss(ServeurCommunication com) {
         com.send("Bonjour, je suis " + this.getNom());
 
         Optional<String[]> identite = Optional.empty();
@@ -69,13 +70,9 @@ public class Bot {
             }
 
             // et on fait plus ample connaissance
-            // attention : si utilisateur deja connu, ne pas redemander ce qu'on sait déjà
             if (utilisateur.isPresent()) {
-                synchronized (currentUtilisateur) {
-                    currentUtilisateur = utilisateur.get();
-                    System.out.println("Bot: " + currentUtilisateur);
-                }
                 synchronized (com) {
+                    com.setCurrentUtilisateur(utilisateur.get());
                     com.notify();
                 }
                 this.getToKnowBetter(com, utilisateur.get());
@@ -247,6 +244,9 @@ public class Bot {
                 com.send("Excellent choix car les baignoires ça fuit !!!!");
             } else {
                 com.send("Ahh fais attention les baignoires ça fuit !!!!");
+            }
+            synchronized (com) {
+                com.notify();
             }
         }
 

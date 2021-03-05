@@ -10,6 +10,7 @@ import fr.leonie.jp.bot.utilisateurs.Utilisateur;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class ServeurMain {
 
@@ -29,23 +30,12 @@ public class ServeurMain {
         System.out.println("Bot démarré et en attente de connexions.");
 
         while (true) {
-            Communication communication = new ServeurCommunication(serverSocket);
+            Utilisateur currentUtilisateur = null;
+            ServeurCommunication communication = new ServeurCommunication(serverSocket, currentUtilisateur);
             communication.open();
 
-            Utilisateur currentUtilisateur = new Utilisateur("TOTO", "Machin", 3, "SaisPas") {
-                @Override
-                public ArrayList<Loisir> getListeLoisirs() {
-                    return null;
-                }
-
-                @Override
-                public String getLoisirCategory() {
-                    return null;
-                }
-            };
-            System.out.println("Main: " + currentUtilisateur);
-            new ServeurThread(communication, currentUtilisateur).start();
-            new SearchThread(communication, currentUtilisateur).start();
+            new ServeurThread(communication).start();
+            new SearchThread(communication).start();
         }
 
     }

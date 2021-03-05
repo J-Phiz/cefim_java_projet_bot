@@ -2,19 +2,19 @@ package fr.leonie.jp.bot.serveur;
 
 import fr.leonie.jp.bot.bot.Bot;
 import fr.leonie.jp.bot.communication.Communication;
+import fr.leonie.jp.bot.communication.ServeurCommunication;
 import fr.leonie.jp.bot.constant.Constant;
 import fr.leonie.jp.bot.utilisateurs.Utilisateur;
 
+import java.util.Optional;
+
 public class SearchThread extends Thread {
-    private final Communication communication;
-    private Utilisateur utilisateur;
+    private final ServeurCommunication communication;
     private final Bot bot;
 
-    public SearchThread(Communication communication, Utilisateur utilisateur) {
+    public SearchThread(ServeurCommunication communication) {
         this.communication = communication;
-        this.utilisateur = utilisateur;
         this.bot = Bot.getInstance();
-        System.out.println("Search Const: " + utilisateur);
     }
 
     @Override
@@ -23,20 +23,19 @@ public class SearchThread extends Thread {
 
         try {
             synchronized (communication) {
-                communication.wait();
+                while(!communication.isCloseRequested()) {
+                    communication.wait();
+
+                    Utilisateur currentUtilisateur = communication.getCurrentUtilisateur();
+                    if (currentUtilisateur != null) {
+                        communication.send(Constant.textInRed(currentUtilisateur.getNom()));
+                    } else {
+                        communication.send(Constant.textInRed("Utilisateur inconnu"));
+                    }
+                }
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        synchronized (utilisateur) {
-            System.out.println("Search: " + utilisateur);
-            if (utilisateur != null) {
-                communication.send(Constant.textInRed(utilisateur.getNom()));
-            } else {
-                communication.send(Constant.textInRed("Utilisateur inconnu"));
-            }
-        }
-
     }
 }
