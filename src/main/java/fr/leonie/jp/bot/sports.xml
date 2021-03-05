@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<sports>
+    <sport id="0">
+        <name>crossfit</name>
+        <nbParticipants>1</nbParticipants>
+    </sport>
+    <sport id="1">
+        <name>muscu</name>
+        <nbParticipants>2</nbParticipants>
+    </sport>
+    <sport id="2">
+        <name>surf</name>
+        <nbParticipants>1</nbParticipants>
+    </sport>
+    <sport id="3">
+        <name>snow</name>
+        <nbParticipants>1</nbParticipants>
+    </sport>
+    <sport id="4">
+        <name>randonnée</name>
+        <nbParticipants>5</nbParticipants>
+    </sport>
+    <sport id="5">
+        <name>krav maga</name>
+        <nbParticipants>1</nbParticipants>
+    </sport>
+    <sport id="6">
+        <name>tennis</name>
+        <nbParticipants>1</nbParticipants>
+    </sport>
+    <sport id="7">
+        <name>basket</name>
+        <nbParticipants>8</nbParticipants>
+    </sport>
+    <sport id="8">
+        <name>course</name>
+        <nbParticipants>1</nbParticipants>
+    </sport>
+    <sport id="9">
+        <name>marche</name>
+        <nbParticipants>1</nbParticipants>
+    </sport>
+    <sport id="10">
+        <name>baseball</name>
+        <nbParticipants>12</nbParticipants>
+    </sport>
+</sports>

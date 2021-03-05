@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jeux>
+    <jeu id="0">
+        <name>tarot</name>
+        <nbParticipants>1</nbParticipants>
+    </jeu>
+    <jeu id="1">
+        <name>doumbal</name>
+        <nbParticipants>2</nbParticipants>
+    </jeu>
+    <jeu id="2">
+        <name>bowling</name>
+        <nbParticipants>1</nbParticipants>
+    </jeu>
+    <jeu id="3">
+        <name>carcassone</name>
+        <nbParticipants>2</nbParticipants>
+    </jeu>
+    <jeu id="4">
+        <name>myto</name>
+        <nbParticipants>2</nbParticipants>
+    </jeu>
+    <jeu id="5">
+        <name>bataille</name>
+        <nbParticipants>4</nbParticipants>
+    </jeu>
+    <jeu id="6">
+        <name>solitaire</name>
+        <nbParticipants>1</nbParticipants>
+    </jeu>
+    <jeu id="7">
+        <name>catane</name>
+        <nbParticipants>5</nbParticipants>
+    </jeu>
+    <jeu id="8">
+        <name>aventuriers du rail</name>
+        <nbParticipants>4</nbParticipants>
+    </jeu>
+</jeux>

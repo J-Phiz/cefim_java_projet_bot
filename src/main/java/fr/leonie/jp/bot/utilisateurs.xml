@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Utilisateurs>
+    <Sportif id="0">
+        <name>David</name>
+        <firstname>Antoine</firstname>
+        <town>Lille</town>
+        <age>36</age>
+        <sdb>bain</sdb>
+        <frequence>4</frequence>
+        <loisirPrefere>surf</loisirPrefere>
+        <sports>
+            <sport>surf</sport>
+            <sport>snow</sport>
+        </sports>
+    </Sportif>
+    <Sportif id="1">
+        <name>Bardu</name>
+        <firstname>Bob</firstname>
+        <town>Fondettes</town>
+        <age>34</age>
+        <sdb>douche</sdb>
+        <frequence>1</frequence>
+        <loisirPrefere>randonnée</loisirPrefere>
+        <sports>
+            <sport>randonnée</sport>
+        </sports>
+        <periodeSport>week-end</periodeSport>
+        <cardioSport>120</cardioSport>
+        <cardioRepos>90</cardioRepos>
+    </Sportif>
+    <Sportif id="2">
+        <name>Dupont</name>
+        <firstname>Roger</firstname>
+        <town>Toulouse</town>
+        <age>32</age>
+        <sdb>bain</sdb>
+        <frequence>9</frequence>
+        <loisirPrefere>surf</loisirPrefere>
+        <sports>
+            <sport>surf</sport>
+            <sport>krav maga</sport>
+            <sport>tennis</sport>
+        </sports>
+        <periodeSport>week-end</periodeSport>
+        <cardioSport>130</cardioSport>
+        <cardioRepos>80</cardioRepos>
+    </Sportif>
+    <Sportif id="3">
+        <name>Parker</name>
+        <firstname>Tony</firstname>
+        <town>Lille</town>
+        <age>45</age>
+        <sdb>douche</sdb>
+        <frequence>5</frequence>
+        <loisirPrefere>basket</loisirPrefere>
+        <sports>
+            <sport>basket</sport>
+            <sport>surf</sport>
+        </sports>
+        <periodeSport>semaine</periodeSport>
+        <cardioSport>100</cardioSport>
+        <cardioRepos>60</cardioRepos>
+    </Sportif>
+    <Joueur id="4">
+        <name>Dusart</name>
+        <firstname>Leonie</firstname>
+        <town>Tours</town>
+        <age>4</age>
+        <sdb>douche</sdb>
+        <frequence>4</frequence>
+        <loisirPrefere>tarot</loisirPrefere>
+        <jeus>
+            <jeu>tarot</jeu>
+            <jeu>bataille</jeu>
+        </jeus>
+        <periodeJeu>journée</periodeJeu>
+        <moyenneNbPers>3</moyenneNbPers>
+        <mange>rien</mange>
+        <bois>vin</bois>
+    </Joueur>
+    <Joueur id="5">
+        <name>Benkel</name>
+        <firstname>Leo</firstname>
+        <town>Tours</town>
+        <age>30</age>
+        <frequence>2</frequence>
+        <loisirPrefere>tarot</loisirPrefere>
+        <jeus>
+            <jeu>myto</jeu>
+            <jeu>tarot</jeu>
+        </jeus>
+        <periodeJeu>soirée</periodeJeu>
+        <moyenneNbPers>2</moyenneNbPers>
+        <mange>eau</mange>
+        <bois>eau</bois>
+    </Joueur>
+    <Joueur id="6">
+        <name>Coudert</name>
+        <firstname>Leonie</firstname>
+        <town>Lyon</town>
+        <age>12</age>
+        <sdb>douche</sdb>
+    </Joueur>
+    <Joueur id="7">
+        <name>Bardu</name>
+        <firstname>Peter</firstname>
+        <town>Tours</town>
+        <age>33</age>
+        <frequence>2</frequence>
+        <loisirPrefere>myto</loisirPrefere>
+        <jeus>
+            <jeu>myto</jeu>
+            <jeu>catane</jeu>
+        </jeus>
+        <periodeJeu>soirée</periodeJeu>
+        <moyenneNbPers>2</moyenneNbPers>
+        <mange>gateau</mange>
+        <bois>the</bois>
+    </Joueur>
+</Utilisateurs>

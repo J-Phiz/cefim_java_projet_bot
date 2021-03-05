@@ -27,6 +27,6 @@ hs_err_pid*
 target/
 out/
 java-bot.iml
-src/main/java/fr/leonie/jp/bot/utilisateurs.xml
-src/main/java/fr/leonie/jp/bot/sports.xml
-src/main/java/fr/leonie/jp/bot/jeux.xml
+#src/main/java/fr/leonie/jp/bot/utilisateurs.xml
+#src/main/java/fr/leonie/jp/bot/sports.xml
+#src/main/java/fr/leonie/jp/bot/jeux.xml
