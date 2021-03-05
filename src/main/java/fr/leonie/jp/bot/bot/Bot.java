@@ -5,6 +5,7 @@ import fr.leonie.jp.bot.loisirs.Jeu;
 import fr.leonie.jp.bot.loisirs.Loisir;
 import fr.leonie.jp.bot.loisirs.LoisirFactory;
 import fr.leonie.jp.bot.loisirs.Sport;
+import fr.leonie.jp.bot.search.Search;
 import fr.leonie.jp.bot.utilisateurs.*;
 import fr.leonie.jp.bot.constant.Constant;
 import fr.leonie.jp.bot.xml.ExportXML;
@@ -37,6 +38,8 @@ public class Bot {
     public String getNom() {
         return nom;
     }
+
+    public ArrayList<Utilisateur> getListeUtilisateurs() { return listeUtilisateurs; }
 
     public void discuss(Communication com) {
         com.send("Bonjour, je suis " + this.getNom());
@@ -307,5 +310,13 @@ public class Bot {
             }
         }
         return Optional.empty();
+    }
+
+    private ArrayList<Utilisateur> findMatches(Utilisateur utilisateur) {
+        Search.SearchBuilder recherche = new Search.SearchBuilder(utilisateur, false, 5)
+                .nbCommonLoisirs(1)
+                .sdb(false);
+        ArrayList<Utilisateur> resultat = recherche.build().result();
+        return resultat;
     }
 }

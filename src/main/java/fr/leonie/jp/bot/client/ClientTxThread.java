@@ -18,7 +18,6 @@ public class ClientTxThread implements Runnable {
     public void run() {
 
         final Scanner sc = new Scanner(System.in);
-        final List<String> byeAnswers = Arrays.asList(Constant.getByeAnswersArray());
         String answer;
         boolean fin = false;
 
