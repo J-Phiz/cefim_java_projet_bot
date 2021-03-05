@@ -89,6 +89,9 @@ public abstract class Utilisateur {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Utilisateur that = (Utilisateur) o;
-        return Objects.equals(nom.toLowerCase(), that.nom.toLowerCase()) && Objects.equals(prenom.toLowerCase(), that.prenom.toLowerCase());
+        return Objects.equals(nom.toLowerCase(), that.nom.toLowerCase()) &&
+                Objects.equals(prenom.toLowerCase(), that.prenom.toLowerCase()) &&
+                Objects.equals(ville.toLowerCase(), that.ville.toLowerCase()) &&
+                age == that.age;
     }
 }
