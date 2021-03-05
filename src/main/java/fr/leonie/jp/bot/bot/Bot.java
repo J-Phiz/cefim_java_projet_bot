@@ -41,7 +41,7 @@ public class Bot {
 
     public ArrayList<Utilisateur> getListeUtilisateurs() { return listeUtilisateurs; }
 
-    public void discuss(Communication com) {
+    public void discuss(Communication com, Utilisateur currentUtilisateur) {
         com.send("Bonjour, je suis " + this.getNom());
 
         Optional<String[]> identite = Optional.empty();
@@ -70,6 +70,14 @@ public class Bot {
 
             // et on fait plus ample connaissance
             if(utilisateur.isPresent()) {
+                synchronized (currentUtilisateur) {
+                    currentUtilisateur = utilisateur.get();
+                    System.out.println("Bot: " + currentUtilisateur);
+                }
+                synchronized (com) {
+                    com.notify();
+                }
+
                 String[] msg = {
                         "Tu préfères rechercher des amis ? Tape 1",
                         "ou continuer à compléter ton profil ? Tape 2"
